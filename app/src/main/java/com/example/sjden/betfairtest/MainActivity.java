@@ -24,8 +24,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.example.sjden.betfairtest.client.Operations;
-import com.example.sjden.betfairtest.client.Requester;
 import com.example.sjden.betfairtest.objects.Event;
 import com.example.sjden.betfairtest.objects.EventType;
 

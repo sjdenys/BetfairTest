@@ -1,10 +1,10 @@
 package com.example.sjden.betfairtest;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.thetransactioncompany.jsonrpc2.JSONRPC2Request;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.apache.http.HttpException;
 
@@ -13,120 +13,157 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
 /**
- * Created by sjden on 28/08/2015.
+ * APINGRequester: sends requests to Betfair API asynchronously, receives response, then returns it via a listener
+ *
+ * @
+ * PUBLIC FEATURES:
+ * // Constructors
+ *    APINGRequester()
+ * // Methods
+ *    sendRequest(String strURL mpURL, jrrParams)
+ *    returnResponse(String strHttpResponse)
+ *    getStrHttpResponse()
+ *    setStrSessionKey(String strSessionKey)
+ *    setHTTPResponseListener(HTTPResponseListener httprspnslstnr)
+ *
+ * MODIFIED:
+ * @version 1.0, 06/09/2015, SD
+ * @author Sean Denys
  */
 public class APINGRequester {
 
     private String strHttpResponse;
+    private static String strSessionKey = "";
+    private HTTPResponseListener listener;
 
     public APINGRequester() {
         this.strHttpResponse = null;
     }
 
-    public void sendRequest(HashMap<String,String> hshmpURL, HashMap<String,String> hshmpHeaders, HashMap<String,String> hshmpParameters){
-        new localRequester().execute(hshmpURL, hshmpParameters);
+    public static String getStrHttpResponse(){
+        return APINGRequester.getStrHttpResponse();
     }
 
+    public static void setStrSessionKey(String strSessionKey) {
+        APINGRequester.strSessionKey = strSessionKey;
+    }
+
+    /**
+     * Receive a JSON-RPC request and pass it on to the AsyncRequester to execute
+     * Precondition: valid URL and JSON-RPC request provided
+     * @param strURL: API URL
+     * @param jrrParams: JSON-RPC request
+     */
+    public void sendRequest(String strURL, JSONRPCRequest jrrParams){
+        new AsyncRequester().execute(strURL, jrrParams);
+    }
+
+    /**
+     * Records the API response so it can be returned via the listener
+     * Precondition: valid API response received
+     * @param strHttpResponse: API response
+     */
     public void returnResponse(String strHttpResponse){
         this.strHttpResponse = strHttpResponse;
     }
 
-    private class localRequester extends AsyncTask<HashMap<String,String>, Void, String> {
+    /**
+     * Sets the listener that will be triggered once the API response is received
+     * Precondition: valid listener provided
+     * @param httprspnslstnr: the listener which will receive the API response
+     */
+    public void setHTTPResponseListener(HTTPResponseListener httprspnslstnr) {
+        this.listener = httprspnslstnr;
+    }
 
-        public String performPostCall(String requestURL, HashMap<String, String> hshmpHeaders, HashMap<String, String> postDataParams) {
+    /**
+     * AsyncRequester: inner class needed to asynchronously send API request data
+     *
+     * @
+     * PUBLIC FEATURES:
+     * // Methods
+     *    doInBackground(Object... objParams)
+     *    performPostCall(String requestURL, JSONRPCRequest jrrAPIRequest)
+     *    onPostExecute(String response)
+     *
+     * MODIFIED:
+     * @version 1.0, 06/09/2015, SD
+     * @author Sean Denys
+     */
+    private class AsyncRequester extends AsyncTask<Object, Void, String> {
+
+        /**
+         * Asynchronously executes the API request
+         * Precondition: valid params provided
+         * @param objParams: parameters used during the async API request
+         */
+        @Override
+        protected String doInBackground(Object... objParams){
+            return performPostCall((String)objParams[0], (JSONRPCRequest)objParams[1]);
+        }
+
+        /**
+         * Actual API request call
+         * Precondition: valid URL and request params provided
+         * @param strRequestURL: API URL
+         * @param jrrAPIRequest: parameters used during the async API request
+         */
+        public String performPostCall(String strRequestURL, JSONRPCRequest jrrAPIRequest) {
             URL url;
-            String response = "";
+            String strResponse = "";
             try {
-                url = new URL(requestURL);
+                url = new URL(strRequestURL);
 
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(15000);
-                conn.setConnectTimeout(15000);
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Accept", "application/json");
-                conn.setRequestProperty("X-Application","irAJdQSQfpqWMKIn");
-                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                for(Map.Entry<String, String> entry : hshmpHeaders.entrySet()){
-                    conn.setRequestProperty(entry.getKey(),entry.getValue());
-                }
+                HttpURLConnection httpurlcnnctn = (HttpURLConnection) url.openConnection();
+                httpurlcnnctn.setReadTimeout(15000);
+                httpurlcnnctn.setConnectTimeout(15000);
+                httpurlcnnctn.setRequestMethod("POST");
+                httpurlcnnctn.setRequestProperty("X-Application", "irAJdQSQfpqWMKIn");
+                httpurlcnnctn.setRequestProperty("Content-Type", "application/json");
+                httpurlcnnctn.setRequestProperty("X-Authentication", APINGRequester.strSessionKey);
+                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
+                String strRequestString = gson.toJson(jrrAPIRequest);
+                OutputStream otptstrm = httpurlcnnctn.getOutputStream();
+                BufferedWriter bffrdwrtr = new BufferedWriter(new OutputStreamWriter(otptstrm));
+                bffrdwrtr.write(strRequestString);
 
-                Map<String,Object> params = new HashMap<String,Object>();
-                params.put("filter", "");
-                JSONRPC2Request reqOut = new JSONRPC2Request("SportsAPING/v1.0/listEventTypes", params, 1);
+                bffrdwrtr.flush();
+                bffrdwrtr.close();
+                otptstrm.close();
+                int intResponseCode=httpurlcnnctn.getResponseCode();
 
-                OutputStream os = conn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os));
-                writer.write(reqOut.toString());
-
-                writer.flush();
-                writer.close();
-                os.close();
-                int responseCode=conn.getResponseCode();
-
-                if (responseCode == HttpsURLConnection.HTTP_OK) {
-                    String line;
-                    BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    while ((line=br.readLine()) != null) {
-                        response+=line;
+                if (intResponseCode == HttpsURLConnection.HTTP_OK) {
+                    String strLine;
+                    BufferedReader bffrdrdr = new BufferedReader(new InputStreamReader(httpurlcnnctn.getInputStream()));
+                    while ((strLine=bffrdrdr.readLine()) != null) {
+                        strResponse += strLine;
                     }
                 }
                 else {
-                    response="";
-                    throw new HttpException(responseCode+"");
+                    strResponse="";
+                    throw new HttpException(intResponseCode + "");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.d("thingy", e.toString());
             }
 
-            return response;
+            return strResponse;
         }
 
-        private String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
-            StringBuilder result = new StringBuilder();
-            boolean first = true;
-            for(Map.Entry<String, String> entry : params.entrySet()){
-                if (first)
-                    first = false;
-                else
-                    result.append("&");
-
-                result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-                result.append("=");
-                result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
-            }
-
-            return result.toString();
+        /**
+         * After async call is completed, triggers listener with response
+         * Precondition: valid API response received
+         * @param strResponse: API response
+         */
+        protected void onPostExecute(String strResponse){
+            listener.ResponseReceived(strResponse);
         }
-
-        protected void onPreExecute(){
-            //Setup is done here
-        }
-        @Override
-        protected String doInBackground(HashMap<String,String>... params){
-            return performPostCall(params[0].get("URL"), params[1], params[2]);
-        }
-        protected void onPostExecute(String response){
-            listener.ResponseReceived(response);
-        }
-    }
-
-    private HTTPResponseListener listener;
-
-    public void setHTTPResponseListener(HTTPResponseListener listener) {
-        this.listener = listener;
     }
 
 }
