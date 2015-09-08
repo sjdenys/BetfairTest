@@ -1,7 +1,6 @@
 package com.example.sjden.betfairtest;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.apache.http.HttpException;
 
@@ -15,6 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
+import com.example.sjden.betfairtest.Constants;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -88,6 +88,7 @@ public class APINGLoginRequester {
      */
     private class AsyncLoginRequester extends AsyncTask<Object, Void, String> {
 
+        Exception exception = null;
         /**
          * Asynchronously executes the login request
          * Precondition: valid params provided
@@ -115,12 +116,11 @@ public class APINGLoginRequester {
                 httpurlcnnctn.setConnectTimeout(15000);
                 httpurlcnnctn.setRequestMethod("POST");
                 httpurlcnnctn.setRequestProperty("Accept", "application/json");
-                httpurlcnnctn.setRequestProperty("X-Application", "irAJdQSQfpqWMKIn");
+                httpurlcnnctn.setRequestProperty("X-Application", Constants.APP_KEY);
                 httpurlcnnctn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
                 OutputStream otptstrm = httpurlcnnctn.getOutputStream();
-                BufferedWriter bffrdwrtr = new BufferedWriter(
-                        new OutputStreamWriter(otptstrm, "UTF-8"));
+                BufferedWriter bffrdwrtr = new BufferedWriter(new OutputStreamWriter(otptstrm, "UTF-8"));
                 bffrdwrtr.write(makePostDataString(mpPOSTDataParams));
 
                 bffrdwrtr.flush();
@@ -141,6 +141,7 @@ public class APINGLoginRequester {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                exception = e;
             }
 
             return strResponse;
@@ -173,7 +174,12 @@ public class APINGLoginRequester {
          * @param strResponse: login response
          */
         protected void onPostExecute(String strResponse){
-            httprspnslstnr.ResponseReceived(strResponse);
+            if(exception != null){
+                httprspnslstnr.ResponseReceived(exception.getClass().getSimpleName());
+            }
+            else {
+                httprspnslstnr.ResponseReceived(strResponse);
+            }
         }
     }
 }

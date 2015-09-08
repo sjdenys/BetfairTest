@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">BetfairTest</string>
 
-    <string name="hello_world">thingy</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="bttnLogInText">Log In</string>
+    <string name="txtvwUsername">Username:</string>
+    <string name="txtvwPassword">Password:</string>
+    <string name="title_activity_race_type">RaceTypeActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 </resources>

@@ -129,6 +129,7 @@ public class APINGRequester {
                 httpurlcnnctn.setRequestProperty("X-Authentication", APINGRequester.strSessionKey);
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
                 String strRequestString = gson.toJson(jrrAPIRequest);
+                Log.d("thingy",strRequestString);
                 OutputStream otptstrm = httpurlcnnctn.getOutputStream();
                 BufferedWriter bffrdwrtr = new BufferedWriter(new OutputStreamWriter(otptstrm));
                 bffrdwrtr.write(strRequestString);

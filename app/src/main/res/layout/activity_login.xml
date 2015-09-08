@@ -1,0 +1,91 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${relativePackage}.${activityClass}"
+    android:background="@color/betfair_yellow"
+    android:clickable="false"
+    android:id="@+id/rlLoginLayout">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/edttxtPassword"
+        android:background="#000000"
+        android:layout_below="@+id/txtvwPassword"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:textColor="#ffffff" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/edttxtUsername"
+        android:inputType="text"
+        android:background="#000000"
+        android:layout_alignEnd="@+id/edttxtPassword"
+        android:layout_alignStart="@+id/edttxtPassword"
+        android:layout_alignRight="@+id/edttxtPassword"
+        android:layout_alignLeft="@+id/edttxtPassword"
+        android:layout_above="@+id/txtvwPassword"
+        android:layout_marginBottom="25dp"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bttnLogInText"
+        android:id="@+id/bttnLogIn"
+        android:onClick="logIn"
+        android:background="#000000"
+        android:textColor="#ffffff"
+        android:layout_below="@+id/edttxtPassword"
+        android:layout_marginTop="25dp"
+        android:layout_alignLeft="@+id/edttxtPassword"
+        android:layout_alignStart="@+id/edttxtPassword"
+        android:layout_alignRight="@+id/edttxtPassword"
+        android:layout_alignEnd="@+id/edttxtPassword"
+        android:height="48dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/txtvwPassword"
+        android:id="@+id/txtvwPassword"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/edttxtPassword"
+        android:layout_alignStart="@+id/edttxtPassword" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/txtvwUsername"
+        android:id="@+id/textView2"
+        android:layout_alignLeft="@+id/edttxtUsername"
+        android:layout_alignStart="@+id/edttxtUsername"
+        android:layout_above="@+id/edttxtUsername"
+        android:layout_marginBottom="10dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:src="@drawable/logo"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/bttnLogIn"
+        android:layout_toLeftOf="@+id/bttnLogIn"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/textView2"
+        android:layout_marginBottom="50dp"
+        android:contentDescription="Logo"
+        android:layout_alignParentBottom="false"
+        android:maxHeight="10dp"
+        android:layout_centerHorizontal="true" />
+
+
+</RelativeLayout>

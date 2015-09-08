@@ -1,6 +1,6 @@
-package com.example.sjden.betfairtest.json;
+package com.example.sjden.betfairtest;
 
-public class Constants {
+public interface Constants {
 	//TODO may want to put some of these things in a properties file of some sort.
 
 	/** HTTP Request Headers **/
@@ -8,7 +8,7 @@ public class Constants {
 	public static final String HTTP_HEADER_ACCEPT = "Accept";
 	public static final String HTTP_HEADER_ACCEPT_CHARSET = "Accept-Charset";
 	public static final String HTTP_HEADER_X_APPLICATION = "X-Application";
-	public static final String APP_KEY = "c23sHUpHKN9z8Soy";
+	public static final String APP_KEY = "irAJdQSQfpqWMKIn";
 	public static final String HTTP_HEADER_X_AUTHENTICATION = "X-Authentication";
 	public static final String HTTP_HEADER_X_ADMINISTRATOR = "X-Administrator";
 	public static final String HTTP_HEADER_X_PROXY_AUTHENTICATION = "X-Proxy-Authentication";
