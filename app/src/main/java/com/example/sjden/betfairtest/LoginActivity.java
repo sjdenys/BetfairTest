@@ -41,7 +41,6 @@ public class LoginActivity extends Activity implements ActivityResponseListener 
         for (int i = 0; i < rl.getChildCount(); i++) {
             rl.getChildAt(i).clearFocus();
         }
-        rl.setAlpha(.5f);
         pdLoggingIn.show();
         lgnhndlr.sendLoginRequest(edttxtUsername.getText().toString(), edttxtPassword.getText().toString());
     }
@@ -52,7 +51,6 @@ public class LoginActivity extends Activity implements ActivityResponseListener 
                 new AlertDialog.Builder(this)
                         .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                rl.setAlpha(1f);
                                 dialog.cancel();
                             }
                         });
