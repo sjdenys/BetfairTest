@@ -5,10 +5,12 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
@@ -19,6 +21,7 @@ public class LoginActivity extends Activity implements ActivityResponseListener 
     private Button bttnLogIn;
     private EditText edttxtUsername;
     private EditText edttxtPassword;
+    private CheckBox chckbxKeepLoggedIn;
     ProgressDialog pdLoggingIn;
 
     @Override
@@ -54,9 +57,22 @@ public class LoginActivity extends Activity implements ActivityResponseListener 
                                 dialog.cancel();
                             }
                         });
+
         if(strResponseReceived.compareTo("SUCCESS") == 0){
+            if(chckbxKeepLoggedIn.isChecked()) {
+                // We need an Editor object to make preference changes.
+                // All objects are from android.context.Context
+                SharedPreferences settings = getSharedPreferences("LoginDataFile", 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString("username", edttxtUsername.getText().toString());
+                editor.putString("password", edttxtPassword.getText().toString());
+                // Commit the edits!
+                editor.commit();
+            }
+
             Intent intnt = new Intent(this, RaceTypeActivity.class);
             startActivity(intnt);
+            finish();
         }
         else{
             if(strResponseReceived.compareTo("UnknownHostException") == 0) {

@@ -8,7 +8,7 @@ public interface Constants {
 	public static final String HTTP_HEADER_ACCEPT = "Accept";
 	public static final String HTTP_HEADER_ACCEPT_CHARSET = "Accept-Charset";
 	public static final String HTTP_HEADER_X_APPLICATION = "X-Application";
-	public static final String APP_KEY = "irAJdQSQfpqWMKIn";
+	public static final String APP_KEY = "QVrWlekPUgCFgGTm";
 	public static final String HTTP_HEADER_X_AUTHENTICATION = "X-Authentication";
 	public static final String HTTP_HEADER_X_ADMINISTRATOR = "X-Administrator";
 	public static final String HTTP_HEADER_X_PROXY_AUTHENTICATION = "X-Proxy-Authentication";
@@ -19,7 +19,7 @@ public interface Constants {
 	
 	/** API Service Name **/
 	public static final String SPORTS_APING_V1_0 = "SportsAPING/v1.0/";
-	public static final String URL = "https://api.betfair.com/exchange/betting/json-rpc/v1";
+	public static final String URL = "https://api-au.betfair.com/exchange/betting/json-rpc/v1";
 	public static final String REDIRECT_URL = "https://www.betfair.com";
 	public static final String LOG_IN_URL = "https://identitysso.betfair.com/view/login?product=" + APP_KEY + "&url=" + REDIRECT_URL;
 	public static final String LOG_OUT_URL = "https://identitysso.betfair.com/api/logout";

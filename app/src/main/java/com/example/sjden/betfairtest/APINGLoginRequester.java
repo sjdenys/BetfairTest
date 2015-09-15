@@ -175,10 +175,10 @@ public class APINGLoginRequester {
          */
         protected void onPostExecute(String strResponse){
             if(exception != null){
-                httprspnslstnr.ResponseReceived(exception.getClass().getSimpleName());
+                httprspnslstnr.ResponseReceived("login", exception.getClass().getSimpleName());
             }
             else {
-                httprspnslstnr.ResponseReceived(strResponse);
+                httprspnslstnr.ResponseReceived("login", strResponse);
             }
         }
     }

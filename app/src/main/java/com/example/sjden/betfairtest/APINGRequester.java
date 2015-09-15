@@ -15,6 +15,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -57,11 +58,10 @@ public class APINGRequester {
     /**
      * Receive a JSON-RPC request and pass it on to the AsyncRequester to execute
      * Precondition: valid URL and JSON-RPC request provided
-     * @param strURL: API URL
      * @param jrrParams: JSON-RPC request
      */
-    public void sendRequest(String strURL, JSONRPCRequest jrrParams){
-        new AsyncRequester().execute(strURL, jrrParams);
+    public void sendRequest(String strRequestType, JSONRPCRequest jrrParams){
+        new AsyncRequester().execute(strRequestType,jrrParams);
     }
 
     /**
@@ -96,29 +96,27 @@ public class APINGRequester {
      * @version 1.0, 06/09/2015, SD
      * @author Sean Denys
      */
-    private class AsyncRequester extends AsyncTask<Object, Void, String> {
-
+    private class AsyncRequester extends AsyncTask<Object, Void, ArrayList<String>> {
         /**
          * Asynchronously executes the API request
          * Precondition: valid params provided
          * @param objParams: parameters used during the async API request
          */
         @Override
-        protected String doInBackground(Object... objParams){
+        protected ArrayList<String> doInBackground(Object... objParams){
             return performPostCall((String)objParams[0], (JSONRPCRequest)objParams[1]);
         }
 
         /**
          * Actual API request call
          * Precondition: valid URL and request params provided
-         * @param strRequestURL: API URL
          * @param jrrAPIRequest: parameters used during the async API request
          */
-        public String performPostCall(String strRequestURL, JSONRPCRequest jrrAPIRequest) {
+        public ArrayList<String> performPostCall(String strRequestType, JSONRPCRequest jrrAPIRequest) {
             URL url;
             String strResponse = "";
             try {
-                url = new URL(strRequestURL);
+                url = new URL(Constants.URL);
 
                 HttpURLConnection httpurlcnnctn = (HttpURLConnection) url.openConnection();
                 httpurlcnnctn.setReadTimeout(15000);
@@ -153,8 +151,10 @@ public class APINGRequester {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            return strResponse;
+            ArrayList<String> alResponse = new ArrayList<String>();
+            alResponse.add(strRequestType);
+            alResponse.add(strResponse);
+            return alResponse;
         }
 
         /**
@@ -162,8 +162,8 @@ public class APINGRequester {
          * Precondition: valid API response received
          * @param strResponse: API response
          */
-        protected void onPostExecute(String strResponse){
-            listener.ResponseReceived(strResponse);
+        protected void onPostExecute(ArrayList<String> strResponse){
+            listener.ResponseReceived(strResponse.get(0), strResponse.get(1));
         }
     }
 

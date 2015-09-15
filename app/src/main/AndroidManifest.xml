@@ -12,15 +12,27 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" >
+        </activity>
+        <activity
+            android:name=".RaceTypeActivity"
+            android:label="@string/title_activity_race_type" >
+        </activity>
+        <activity
+            android:name=".VenuesActivity"
+            android:label="@string/title_activity_venue_list"
+            android:parentActivityName=".RaceTypeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.sjden.betfairtest.RaceTypeActivity" />
+        </activity>
+        <activity
+            android:name=".SplashScreenActivity"
+            android:label="@string/title_activity_splash_screen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".RaceTypeActivity"
-            android:label="@string/title_activity_race_type" >
         </activity>
     </application>
 

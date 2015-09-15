@@ -41,7 +41,7 @@ public class LoginHandler implements HTTPResponseListener {
     }
 
     @Override
-    public void ResponseReceived(String strResponseReceived) {
+    public void ResponseReceived(String strRequestType, String strResponseReceived) {
         String strSessionToken = "";
         String strStatus = "";
         HashMap<String,String> hmJSON = new HashMap<>();
