@@ -3,6 +3,7 @@ package com.example.sjden.betfairtest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +15,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
+
 public class LoginActivity extends Activity implements ActivityResponseListener {
 
     private LoginHandler lgnhndlr = new LoginHandler();
@@ -23,6 +26,7 @@ public class LoginActivity extends Activity implements ActivityResponseListener 
     private EditText edttxtPassword;
     private CheckBox chckbxKeepLoggedIn;
     ProgressDialog pdLoggingIn;
+    ArrayList<String> alAcceptableUsernames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +37,15 @@ public class LoginActivity extends Activity implements ActivityResponseListener 
         bttnLogIn = (Button)findViewById(R.id.bttnLogIn);
         edttxtUsername = (EditText)findViewById(R.id.edttxtUsername);
         edttxtPassword = (EditText)findViewById(R.id.edttxtPassword);
+        chckbxKeepLoggedIn = (CheckBox)findViewById(R.id.chckbxKeepLoggedIn);
         pdLoggingIn = new ProgressDialog(LoginActivity.this);
         pdLoggingIn.setMessage("Logging in...");
+        alAcceptableUsernames = new ArrayList<>();
+        for(int i = 1; i <= 6 ; i++){
+            if(i != 2) {
+                alAcceptableUsernames.add("TestAPI" + i);
+            }
+        }
         for (int i = 0; i < rl.getChildCount(); i++) {
             rl.getChildAt(i).clearFocus();
         }
@@ -44,8 +55,24 @@ public class LoginActivity extends Activity implements ActivityResponseListener 
         for (int i = 0; i < rl.getChildCount(); i++) {
             rl.getChildAt(i).clearFocus();
         }
-        pdLoggingIn.show();
-        lgnhndlr.sendLoginRequest(edttxtUsername.getText().toString(), edttxtPassword.getText().toString());
+        if(alAcceptableUsernames.contains(edttxtUsername.getText().toString())) {
+            pdLoggingIn.show();
+            lgnhndlr.sendLoginRequest(edttxtUsername.getText().toString(), edttxtPassword.getText().toString());
+        }
+        else{
+            AlertDialog.Builder alertDialogBuilder =
+                    new AlertDialog.Builder(this)
+                            .setTitle("Couldn't log in")
+                            .setMessage("Invalid username")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+
+                                        }
+                                    }
+                            );
+            AlertDialog adError = alertDialogBuilder.show();
+        }
     }
 
     public void responseReceived(String strResponseReceived) {
@@ -62,14 +89,13 @@ public class LoginActivity extends Activity implements ActivityResponseListener 
             if(chckbxKeepLoggedIn.isChecked()) {
                 // We need an Editor object to make preference changes.
                 // All objects are from android.context.Context
-                SharedPreferences settings = getSharedPreferences("LoginDataFile", 0);
+                SharedPreferences settings = this.getSharedPreferences("LoginDataFile", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("username", edttxtUsername.getText().toString());
                 editor.putString("password", edttxtPassword.getText().toString());
                 // Commit the edits!
-                editor.commit();
+                editor.apply();
             }
-
             Intent intnt = new Intent(this, RaceTypeActivity.class);
             startActivity(intnt);
             finish();

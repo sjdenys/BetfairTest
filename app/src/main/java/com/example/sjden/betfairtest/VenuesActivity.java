@@ -2,8 +2,11 @@ package com.example.sjden.betfairtest;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.ArrayList;
 
 public class VenuesActivity extends AppCompatActivity {
 
@@ -11,6 +14,10 @@ public class VenuesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venues);
+        ArrayList<String> events = (ArrayList<String>)getIntent().getSerializableExtra("events");
+        for(String s : events){
+            Log.d("thingy", s);
+        }
     }
 
     @Override

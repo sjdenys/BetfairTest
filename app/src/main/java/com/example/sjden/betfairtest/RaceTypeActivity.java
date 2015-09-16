@@ -1,36 +1,65 @@
 package com.example.sjden.betfairtest;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class RaceTypeActivity extends AppCompatActivity implements ActivityResponseListener {
 
     private RaceTypeHandler rctyphndlr = new RaceTypeHandler();
+    private Button bttnThoroughbreds;
+    private Button bttnHarness;
+    private Button bttnGreyhounds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_race_type);
         RelativeLayout rl = (RelativeLayout)findViewById(R.id.rlRaceType);
+        bttnThoroughbreds = (Button)findViewById(R.id.bttnThoroughbreds);
+        bttnHarness = (Button)findViewById(R.id.bttnHarness);
+        bttnGreyhounds = (Button)findViewById(R.id.bttnGreyhounds);
         int count = rl.getChildCount();
         for(int i = 0; i < count; i++)
         {
             View v = rl.getChildAt(i);
-            if(v instanceof TextView)
+            if(v instanceof Button)
             {
-                ((TextView) v).setTextSize(getFontSize(RaceTypeActivity.this));
+                ((Button) v).setTextSize(getFontSize(RaceTypeActivity.this));
             }
         }
         rctyphndlr.setActivityResponseListener(RaceTypeActivity.this);
         rctyphndlr.sendRequestHorseEvents();
         rctyphndlr.sendRequestGreyhoundEvents();
+    }
+
+    public void listThoroughbreds(View view){
+        Intent intnt = new Intent(this, VenuesActivity.class);
+        intnt.putExtra("events",rctyphndlr.getStrHorses());
+        intnt.putExtra("raceType", "thoroughbreds");
+        startActivity(intnt);
+    }
+
+    public void listHarness(View view){
+        Intent intnt = new Intent(this, VenuesActivity.class);
+        intnt.putExtra("events",rctyphndlr.getStrHorses());
+        intnt.putExtra("raceType", "harness");
+        startActivity(intnt);
+    }
+
+    public void listGreyhounds(View view){
+        Intent intnt = new Intent(this, VenuesActivity.class);
+        intnt.putExtra("events",rctyphndlr.getStrGreyhounds());
+        intnt.putExtra("raceType", "greyhounds");
+        startActivity(intnt);
     }
 
     @Override
@@ -62,7 +91,7 @@ public class RaceTypeActivity extends AppCompatActivity implements ActivityRespo
 
         // lets try to get them back a font size realtive to the pixel width of the screen
         final float WIDE = activity.getResources().getDisplayMetrics().widthPixels;
-        int valueWide = (int)(WIDE / 8.0f / (dMetrics.scaledDensity));
+        int valueWide = (int)(WIDE / 16.0f / (dMetrics.scaledDensity));
         return valueWide;
     }
 

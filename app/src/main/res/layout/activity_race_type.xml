@@ -8,49 +8,36 @@
     android:id="@+id/rlRaceType"
     android:background="@color/betfair_yellow">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <Button
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Harness"
-        android:id="@+id/txtvwHarness"
+        android:id="@+id/bttnHarness"
         android:layout_centerVertical="true"
-        android:textColor="#ffffff"
-        android:background="#000000"
-        android:textSize="45dp"
-        android:layout_alignLeft="@+id/txtvwThoroughbreds"
-        android:layout_alignStart="@+id/txtvwThoroughbreds"
-        android:layout_alignRight="@+id/txtvwThoroughbreds"
-        android:layout_alignEnd="@+id/txtvwThoroughbreds"
-        android:gravity="center" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Thoroughbreds"
-        android:id="@+id/txtvwThoroughbreds"
-        android:textColor="#ffffff"
-        android:background="#000000"
-        android:textSize="45dp"
-        android:layout_above="@+id/txtvwHarness"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp" />
+        android:onClick="listHarness" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <Button
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Greyhounds"
-        android:id="@+id/txtvwGreyhounds"
-        android:textColor="#ffffff"
-        android:background="#000000"
-        android:textSize="45dp"
-        android:gravity="center"
-        android:layout_below="@+id/txtvwHarness"
-        android:layout_marginTop="30dp"
-        android:layout_alignLeft="@+id/txtvwHarness"
-        android:layout_alignStart="@+id/txtvwHarness"
-        android:layout_alignRight="@+id/txtvwHarness"
-        android:layout_alignEnd="@+id/txtvwHarness" />
+        android:id="@+id/bttnGreyhounds"
+        android:layout_below="@+id/bttnHarness"
+        android:layout_alignLeft="@+id/bttnHarness"
+        android:layout_alignStart="@+id/bttnHarness"
+        android:layout_marginTop="29dp"
+        android:onClick="listGreyhounds" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Thoroughbreds"
+        android:id="@+id/bttnThoroughbreds"
+        android:layout_above="@+id/bttnHarness"
+        android:layout_alignLeft="@+id/bttnHarness"
+        android:layout_alignStart="@+id/bttnHarness"
+        android:layout_marginBottom="30dp"
+        android:nestedScrollingEnabled="true"
+        android:onClick="listThoroughbreds" />
+
 </RelativeLayout>

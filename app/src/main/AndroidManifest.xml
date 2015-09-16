@@ -26,11 +26,9 @@
                 android:value="com.example.sjden.betfairtest.RaceTypeActivity" />
         </activity>
         <activity
-            android:name=".SplashScreenActivity"
-            android:label="@string/title_activity_splash_screen" >
+            android:name=".SplashScreenActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -34,14 +34,23 @@ public class RaceTypeHandler implements HTTPResponseListener  {
     private APINGRequester requester;
     private ActivityResponseListener actrspnslstnr;
     private String strRequestType;
-    ArrayList<Event> evntHorses;
-    ArrayList<Event> evntGreyhounds;
+
+    public ArrayList<String> getStrHorses() {
+        return strHorses;
+    }
+
+    public ArrayList<String> getStrGreyhounds() {
+        return strGreyhounds;
+    }
+
+    ArrayList<String> strHorses;
+    ArrayList<String> strGreyhounds;
 
     public RaceTypeHandler() {
         this.requester = new APINGRequester();
         requester.setHTTPResponseListener(RaceTypeHandler.this);
-        this.evntHorses = new ArrayList<Event>();
-        this.evntGreyhounds = new ArrayList<Event>();
+        this.strHorses = new ArrayList<String>();
+        this.strGreyhounds = new ArrayList<String>();
     }
 
     /**
@@ -73,28 +82,6 @@ public class RaceTypeHandler implements HTTPResponseListener  {
         jrr.setMethod("SportsAPING/v1.0/listEvents");
         jrr.setParams(params);
         requester.sendRequest(strRequestType, jrr);
-    }
-
-    public void sendRequestMark(){
-        strRequestType = "listMarketCatalogue";
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("filter", getMarketFilterMark());
-        params.put("maxResults", 100);
-        JSONRPCRequest jrr = new JSONRPCRequest();
-        jrr.setId("1");
-        jrr.setMethod("SportsAPING/v1.0/listMarketCatalogue");
-        jrr.setParams(params);
-        requester.sendRequest(strRequestType, jrr);
-    }
-
-    private MarketFilter getMarketFilterMark(){
-        MarketFilter mrktfltr = new MarketFilter();
-        HashSet<String> hsEventIDs = new HashSet<String>();
-        for(Event e : evntHorses){
-            hsEventIDs.add(e.getId());
-        }
-        mrktfltr.setEventIds(hsEventIDs);
-        return mrktfltr;
     }
 
     private MarketFilter getMarketFilterHorses(){
@@ -152,20 +139,16 @@ public class RaceTypeHandler implements HTTPResponseListener  {
                             try {
                                 JSONObject oneObject = jArray.getJSONObject(i);
                                 oneObject = new JSONObject(oneObject.getString("event"));
-                                evntHorses.add(gson.fromJson(oneObject.toString(), Event.class));
-                                //Log.d("thingy", evntHorses.get(i).toString());
+                                strHorses.add(oneObject.toString());
                             } catch (JSONException e) {
                                 throw e;
                             }
                         }
-                        Collections.sort(evntHorses, new Comparator<Event>() {
-                            public int compare(Event o1, Event o2) {
-                                return o1.getOpenDate().compareTo(o2.getOpenDate());
-                            }
-                        });
-                        Log.d("thingy", evntHorses.get(0).toString());
-                        Log.d("thingy", evntHorses.get(evntHorses.size() - 1).toString());
-                        sendRequestMark();
+//                        Collections.sort(evntHorses, new Comparator<Event>() {
+//                            public int compare(Event o1, Event o2) {
+//                                return o1.getOpenDate().compareTo(o2.getOpenDate());
+//                            }
+//                        });
                     }catch (Exception ex) {
                         Log.d("thingy", ex.toString());
                     }
@@ -180,30 +163,16 @@ public class RaceTypeHandler implements HTTPResponseListener  {
                             try {
                                 JSONObject oneObject = jArray.getJSONObject(i);
                                 oneObject = new JSONObject(oneObject.getString("event"));
-                                evntGreyhounds.add(gson.fromJson(oneObject.toString(), Event.class));
-                                //Log.d("thingy", evntGreyhounds.get(i).toString());
+                                strGreyhounds.add(oneObject.toString());
                             } catch (JSONException e) {
                                 throw e;
                             }
                         }
-                        Collections.sort(evntGreyhounds, new Comparator<Event>() {
-                            public int compare(Event o1, Event o2) {
-                                return o1.getOpenDate().compareTo(o2.getOpenDate());
-                            }
-                        });
-                        Log.d("thingy", evntGreyhounds.get(0).toString());
-                        Log.d("thingy", evntGreyhounds.get(evntGreyhounds.size() - 1).toString());
-                    } catch (Exception ex) {
-                        Log.d("thingy", ex.toString());
-                    }
-                    break;
-                case "listMarketCatalogue":
-                    try {
-                        Log.d("thingy", strResponseReceived);
-                        JSONObject jObject = new JSONObject(strResponseReceived);
-                        String aJsonString = jObject.getString("result");
-                        JSONArray jArray = new JSONArray(aJsonString);
-                        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
+//                        Collections.sort(evntGreyhounds, new Comparator<Event>() {
+//                            public int compare(Event o1, Event o2) {
+//                                return o1.getOpenDate().compareTo(o2.getOpenDate());
+//                            }
+//                        });
                     } catch (Exception ex) {
                         Log.d("thingy", ex.toString());
                     }
