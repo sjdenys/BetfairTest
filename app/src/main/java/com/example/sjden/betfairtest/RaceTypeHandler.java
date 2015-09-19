@@ -43,14 +43,28 @@ public class RaceTypeHandler implements HTTPResponseListener  {
         return strGreyhounds;
     }
 
-    ArrayList<String> strHorses;
-    ArrayList<String> strGreyhounds;
+    private ArrayList<String> strHorses;
+    private ArrayList<String> strGreyhounds;
+
+    public int getIntHorseCount() {
+        return intHorseCount;
+    }
+
+    private int intHorseCount;
+
+    public int getIntGreyhoundCount() {
+        return intGreyhoundCount;
+    }
+
+    private int intGreyhoundCount;
 
     public RaceTypeHandler() {
-        this.requester = new APINGRequester();
-        requester.setHTTPResponseListener(RaceTypeHandler.this);
         this.strHorses = new ArrayList<String>();
         this.strGreyhounds = new ArrayList<String>();
+        this.intHorseCount = -1;
+        this.intGreyhoundCount = -1;
+        this.requester = new APINGRequester();
+        this.requester.setHTTPResponseListener(RaceTypeHandler.this);
     }
 
     /**
@@ -144,11 +158,8 @@ public class RaceTypeHandler implements HTTPResponseListener  {
                                 throw e;
                             }
                         }
-//                        Collections.sort(evntHorses, new Comparator<Event>() {
-//                            public int compare(Event o1, Event o2) {
-//                                return o1.getOpenDate().compareTo(o2.getOpenDate());
-//                            }
-//                        });
+                        intHorseCount = strHorses.size();
+                        actrspnslstnr.responseReceived("");
                     }catch (Exception ex) {
                         Log.d("thingy", ex.toString());
                     }
@@ -168,11 +179,8 @@ public class RaceTypeHandler implements HTTPResponseListener  {
                                 throw e;
                             }
                         }
-//                        Collections.sort(evntGreyhounds, new Comparator<Event>() {
-//                            public int compare(Event o1, Event o2) {
-//                                return o1.getOpenDate().compareTo(o2.getOpenDate());
-//                            }
-//                        });
+                        intGreyhoundCount = strGreyhounds.size();
+                        actrspnslstnr.responseReceived("");
                     } catch (Exception ex) {
                         Log.d("thingy", ex.toString());
                     }

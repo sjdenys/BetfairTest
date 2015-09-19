@@ -8,12 +8,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -49,6 +51,40 @@ public class LoginActivity extends Activity implements ActivityResponseListener 
         for (int i = 0; i < rl.getChildCount(); i++) {
             rl.getChildAt(i).clearFocus();
         }
+        scaleText();
+    }
+
+    public void scaleText() {
+        for(int i = 0; i < rl.getChildCount(); i++)
+        {
+            View v = rl.getChildAt(i);
+            if(v.getClass().equals(Button.class))
+            {
+                ((Button) v).setTextSize(getFontSize(LoginActivity.this,16.0f));
+            }
+            else if(v.getClass().equals(TextView.class))
+            {
+                ((TextView) v).setTextSize(getFontSize(LoginActivity.this, 16.0f));
+            }
+            else if(v.getClass().equals(EditText.class))
+            {
+                ((EditText) v).setTextSize(getFontSize(LoginActivity.this, 16.0f));
+            }
+            else if(v.getClass().equals(CheckBox.class))
+            {
+                ((CheckBox) v).setTextSize(getFontSize(LoginActivity.this, 24.0f));
+            }
+        }
+    }
+
+    public int getFontSize(Activity activity, float fltSize) {
+        DisplayMetrics dMetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(dMetrics);
+
+        // lets try to get them back a font size relative to the pixel width of the screen
+        final float WIDE = activity.getResources().getDisplayMetrics().widthPixels;
+        int valueWide = (int)(WIDE / fltSize / (dMetrics.scaledDensity));
+        return valueWide;
     }
 
     public void logIn(View view){

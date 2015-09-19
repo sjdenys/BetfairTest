@@ -13,7 +13,7 @@
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/edttxtPassword"
-        android:background="#000000"
+        android:background="@color/betfair_black"
         android:layout_below="@+id/txtvwPassword"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/edttxtUsername"
         android:inputType="text"
-        android:background="#000000"
+        android:background="@color/betfair_black"
         android:layout_alignEnd="@+id/edttxtPassword"
         android:layout_alignStart="@+id/edttxtPassword"
         android:layout_alignRight="@+id/edttxtPassword"
@@ -41,7 +41,6 @@
         android:text="@string/bttnLogInText"
         android:id="@+id/bttnLogIn"
         android:onClick="logIn"
-        android:background="#000000"
         android:textColor="#ffffff"
         android:height="48dp"
         android:layout_alignTop="@+id/chckbxKeepLoggedIn"
@@ -94,7 +93,9 @@
         android:layout_marginTop="25dp"
         android:layout_below="@+id/edttxtPassword"
         android:layout_alignLeft="@+id/edttxtPassword"
-        android:layout_alignStart="@+id/edttxtPassword" />
+        android:layout_alignStart="@+id/edttxtPassword"
+        android:layout_marginRight="25dp"
+        android:layout_toStartOf="@id/bttnLogIn" />
 
 
 </RelativeLayout>

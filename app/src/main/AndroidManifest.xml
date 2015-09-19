@@ -19,11 +19,7 @@
         </activity>
         <activity
             android:name=".VenuesActivity"
-            android:label="@string/title_activity_venue_list"
-            android:parentActivityName=".RaceTypeActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.sjden.betfairtest.RaceTypeActivity" />
+            android:label="@string/title_activity_venue_list" >
         </activity>
         <activity
             android:name=".SplashScreenActivity" >
