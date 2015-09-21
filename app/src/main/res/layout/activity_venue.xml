@@ -8,4 +8,29 @@
     android:id="@+id/rlVenue"
     android:background="@color/betfair_yellow">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="There are no races scheduled for today. Please try again later."
+        android:id="@+id/txtvwNoRacesToday"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="There are no races scheduled for today. Please try again later."
+        android:id="@+id/txtvwNoRacesTomorrow"
+        android:visibility="invisible"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spnnrRaceDates"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

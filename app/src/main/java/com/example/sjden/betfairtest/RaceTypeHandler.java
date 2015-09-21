@@ -153,7 +153,9 @@ public class RaceTypeHandler implements HTTPResponseListener  {
                             try {
                                 JSONObject oneObject = jArray.getJSONObject(i);
                                 oneObject = new JSONObject(oneObject.getString("event"));
-                                strHorses.add(oneObject.toString());
+                                if(!strHorses.contains("(AvB)")) {
+                                    strHorses.add(oneObject.toString());
+                                }
                             } catch (JSONException e) {
                                 throw e;
                             }
@@ -174,7 +176,9 @@ public class RaceTypeHandler implements HTTPResponseListener  {
                             try {
                                 JSONObject oneObject = jArray.getJSONObject(i);
                                 oneObject = new JSONObject(oneObject.getString("event"));
-                                strGreyhounds.add(oneObject.toString());
+                                if(!strGreyhounds.contains("(AvB)")) {
+                                    strGreyhounds.add(oneObject.toString());
+                                }
                             } catch (JSONException e) {
                                 throw e;
                             }

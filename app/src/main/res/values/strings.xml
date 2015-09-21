@@ -10,4 +10,10 @@
     <string name="title_activity_venue_list">VenueList</string>
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_races">RacesActivity</string>
+    <string-array name="race_date_array">
+        <item>Today</item>
+        <item>Tomorrow</item>
+    </string-array>
+
 </resources>

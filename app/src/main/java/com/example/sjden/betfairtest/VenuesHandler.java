@@ -5,14 +5,15 @@ import android.util.Log;
 import com.example.sjden.betfairtest.objects.Event;
 import com.example.sjden.betfairtest.objects.MarketFilter;
 import com.example.sjden.betfairtest.objects.MarketProjection;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -62,33 +63,50 @@ public class VenuesHandler implements HTTPResponseListener {
         return alevntTomorrowEvents;
     }
 
-
     public void sortAndDivideEvents(){
         GregorianCalendar gcToday = new GregorianCalendar();
+        GregorianCalendar gcEventDate = new GregorianCalendar();
         for(Event e : alevntEvents){
-            if(e.getOpenDate().getDay() == gcToday.getTime().getDay()){
+            gcEventDate.setTime(e.getOpenDate());
+            if(gcToday.get(Calendar.DAY_OF_YEAR) == gcEventDate.get(Calendar.DAY_OF_YEAR)){
                 alevntTodayEvents.add(e);
             }
             else{
                 alevntTomorrowEvents.add(e);
             }
         }
-        ArrayList<Event> alevntTemp = new ArrayList<Event>(alevntTodayEvents);
-        for(int i = 0 ; i < alevntTodayEvents.size() ; i++){
-            if(alevntTodayEvents.get(i).getCountryCode().compareTo("NZ") == 0){
-                alevntTemp.remove(alevntTodayEvents.get(i));
-                alevntTemp.add(alevntTodayEvents.get(i));
+
+        ArrayList<Event> alevntTemp = new ArrayList<Event>();
+        if(alevntTodayEvents.size() > 0) {
+            Collections.sort(alevntTodayEvents, new Comparator<Event>() {
+                public int compare(Event e1, Event e2) {
+                    return e1.getOpenDate().compareTo(e2.getOpenDate());
+                }
+            });
+            alevntTemp = new ArrayList<Event>(alevntTodayEvents);
+            for (int i = 0; i < alevntTodayEvents.size(); i++) {
+                if (alevntTodayEvents.get(i).getCountryCode().compareTo("NZ") == 0) {
+                    alevntTemp.remove(alevntTodayEvents.get(i));
+                    alevntTemp.add(alevntTodayEvents.get(i));
+                }
             }
         }
         alevntTodayEvents = alevntTemp;
-        alevntTemp = new ArrayList<Event>(alevntTomorrowEvents);
-        for(int i = 0 ; i < alevntTomorrowEvents.size() ; i++){
-            if(alevntTomorrowEvents.get(i).getCountryCode().compareTo("NZ") == 0){
-                alevntTemp.remove(alevntTomorrowEvents.get(i));
-                alevntTemp.add(alevntTomorrowEvents.get(i));
+        if(alevntTomorrowEvents.size() > 0) {
+            Collections.sort(alevntTomorrowEvents, new Comparator<Event>() {
+                public int compare(Event e1, Event e2) {
+                    return e1.getOpenDate().compareTo(e2.getOpenDate());
+                }
+            });
+            alevntTemp = new ArrayList<Event>(alevntTomorrowEvents);
+            for (int i = 0; i < alevntTomorrowEvents.size(); i++) {
+                if (alevntTomorrowEvents.get(i).getCountryCode().compareTo("NZ") == 0) {
+                    alevntTemp.remove(alevntTomorrowEvents.get(i));
+                    alevntTemp.add(alevntTomorrowEvents.get(i));
+                }
             }
+            alevntTomorrowEvents = alevntTemp;
         }
-        alevntTomorrowEvents = alevntTemp;
     }
 
     public void sendRequestThoroughbredMarkets(){
@@ -97,7 +115,6 @@ public class VenuesHandler implements HTTPResponseListener {
         params.put("filter", getMarketFilter());
         HashSet<Object> mp = new HashSet<Object>();
         mp.add(MarketProjection.EVENT);
-        //mp.add(MarketProjection.RUNNER_DESCRIPTION);
         params.put("marketProjection",mp);
         params.put("maxResults", 1000);
         JSONRPCRequest jrr = new JSONRPCRequest();
@@ -113,7 +130,6 @@ public class VenuesHandler implements HTTPResponseListener {
         params.put("filter", getMarketFilter());
         HashSet<Object> mp = new HashSet<Object>();
         mp.add(MarketProjection.EVENT);
-       // mp.add(MarketProjection.RUNNER_DESCRIPTION);
         params.put("marketProjection",mp);
         params.put("maxResults", 1000);
         JSONRPCRequest jrr = new JSONRPCRequest();
@@ -141,7 +157,6 @@ public class VenuesHandler implements HTTPResponseListener {
         else {
             switch (strRequestType) {
                 case "listMarketCatalogueThoroughbreds":
-                    Log.d("thingy",Integer.toString(alevntEvents.size()));
                     try {
                         JSONObject jObject = new JSONObject(strResponseReceived);
                         JSONArray jArray = new JSONArray(jObject.getString("result"));
@@ -162,7 +177,7 @@ public class VenuesHandler implements HTTPResponseListener {
                                 throw e;
                             }
                         }
-                        alevntEvents = alevntEventsCopy;
+                        this.alevntEvents = new ArrayList<Event>(alevntEventsCopy);
                         sortAndDivideEvents();
                         actrspnslstnr.responseReceived("");
                     }catch (Exception ex) {

@@ -21,12 +21,16 @@
             android:name=".VenuesActivity"
             android:label="@string/title_activity_venue_list" >
         </activity>
-        <activity
-            android:name=".SplashScreenActivity" >
+        <activity android:name=".SplashScreenActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".RacesActivity"
+            android:label="@string/title_activity_races" >
         </activity>
     </application>
 
