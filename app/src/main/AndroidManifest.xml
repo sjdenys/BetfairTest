@@ -32,6 +32,10 @@
             android:name=".RacesActivity"
             android:label="@string/title_activity_races" >
         </activity>
+        <activity
+            android:name=".RunnersActivity"
+            android:label="@string/title_activity_runners" >
+        </activity>
     </application>
 
 </manifest>

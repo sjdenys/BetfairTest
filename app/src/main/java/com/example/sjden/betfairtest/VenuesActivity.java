@@ -1,11 +1,12 @@
 package com.example.sjden.betfairtest;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.internal.widget.AdapterViewCompat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -27,9 +29,14 @@ import java.util.ArrayList;
 public class VenuesActivity extends AppCompatActivity implements ActivityResponseListener, AdapterView.OnItemSelectedListener {
 
     private VenuesHandler vnshndlr = new VenuesHandler();
+    private String strCurrentRaceDate = "Today";
+    private boolean boolFirstRun = true;
+    private ArrayList<Button> albttnVenues = new ArrayList<>();
     private RelativeLayout rl;
     private TextView txtvwNoRacesToday;
+    private TextView txtvwNoRacesTomorrow;
     private Spinner spnnrRaceDates;
+    private ProgressBar prgrssbrLoadingHorses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,9 +100,10 @@ public class VenuesActivity extends AppCompatActivity implements ActivityRespons
     }
 
     public void initialiseUIElements(){
-        this.rl = (RelativeLayout)findViewById(R.id.rlVenue);
+        this.rl = (RelativeLayout)findViewById(R.id.rlContent);
         this.txtvwNoRacesToday = (TextView)findViewById(R.id.txtvwNoRacesToday);
-        this.spnnrRaceDates =  (Spinner) findViewById(R.id.spnnrRaceDates);
+        this.txtvwNoRacesTomorrow = (TextView)findViewById(R.id.txtvwNoRacesTomorrow);
+        this.spnnrRaceDates = (Spinner) findViewById(R.id.spnnrRaceDates);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.race_date_array, android.R.layout.simple_spinner_item);
@@ -103,14 +111,50 @@ public class VenuesActivity extends AppCompatActivity implements ActivityRespons
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         this.spnnrRaceDates.setAdapter(adapter);
+        this.spnnrRaceDates.setOnItemSelectedListener(this);
+        this.prgrssbrLoadingHorses = (ProgressBar)findViewById(R.id.prgrssbrLoadingHorses);
     }
 
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        Log.d("thingy", parent.getItemAtPosition(pos).toString());
+        if(!boolFirstRun) {
+            for (Button b : this.albttnVenues) {
+                this.rl.removeView(b);
+            }
+            this.strCurrentRaceDate = this.spnnrRaceDates.getSelectedItem().toString();
+            createVenueButtons();
+            }
+        else{
+            boolFirstRun = false;
+        }
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
         Log.d("thingy", "none");
+    }
+
+    public void scaleText() {
+        for(int i = 0; i < rl.getChildCount(); i++)
+        {
+            View v = rl.getChildAt(i);
+            if(v.getClass().equals(Button.class))
+            {
+                ((Button) v).setTextSize(getFontSize(VenuesActivity.this,16.0f));
+            }
+            else if(v.getClass().equals(TextView.class))
+            {
+                ((TextView) v).setTextSize(getFontSize(VenuesActivity.this, 16.0f));
+            }
+        }
+    }
+
+    public int getFontSize(Activity activity, float fltSize) {
+        DisplayMetrics dMetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(dMetrics);
+
+        // lets try to get them back a font size relative to the pixel width of the screen
+        final float WIDE = activity.getResources().getDisplayMetrics().widthPixels;
+        int valueWide = (int)(WIDE / fltSize / (dMetrics.scaledDensity));
+        return valueWide;
     }
 
     public ArrayList<Event> loadEventArray(ArrayList<String> alstrEvents){
@@ -123,47 +167,72 @@ public class VenuesActivity extends AppCompatActivity implements ActivityRespons
     }
 
     public void createVenueButtons(){
-        ArrayList<Button> albttnVenues = new ArrayList<>();
+        ArrayList<Event> alEvents = new ArrayList<>();
+        alEvents.clear();
+        albttnVenues.clear();
+        this.txtvwNoRacesToday.setVisibility(View.INVISIBLE);
+        this.txtvwNoRacesTomorrow.setVisibility(View.INVISIBLE);
         Button bttnForArray;
 
-        for(int i = 0 ; i < vnshndlr.getAlevntTodayEvents().size() ; i++){
-            if(vnshndlr.getAlevntTodayEvents().get(i).getVenue() != null) {
+        if(this.strCurrentRaceDate.compareTo("Today") == 0){
+            alEvents = new ArrayList<>(vnshndlr.getAlevntTodayEvents());
+        }
+        else if(this.strCurrentRaceDate.compareTo("Tomorrow") == 0){
+            alEvents = new ArrayList<>(vnshndlr.getAlevntTomorrowEvents());
+        }
+
+        for(int i = 0 ; i < alEvents.size() ; i++){
+            if(alEvents.get(i).getVenue() != null) {
                 bttnForArray = new Button(this);
-                bttnForArray.setId(Integer.parseInt(vnshndlr.getAlevntTodayEvents().get(i).getId()));
-                bttnForArray.setTag("bttn" + vnshndlr.getAlevntTodayEvents().get(i).getVenue());
-                bttnForArray.setText(vnshndlr.getAlevntTodayEvents().get(i).getVenue());
+                bttnForArray.setId(Integer.parseInt(alEvents.get(i).getId()));
+                bttnForArray.setTag("bttn" + alEvents.get(i).getVenue());
+                bttnForArray.setText(alEvents.get(i).getVenue());
                 bttnForArray.setOnClickListener(new Button.OnClickListener() {
                     public void onClick(View v) {
                         getOnClickDoSomething(v);
                     }
                 });
-                if (vnshndlr.getAlevntTodayEvents().get(i).getCountryCode().compareTo("NZ") == 0) {
-                    bttnForArray.setText(bttnForArray.getText() + " (" + vnshndlr.getAlevntTodayEvents().get(i).getCountryCode() + ")");
-                    bttnForArray.setText(bttnForArray.getText() + " (" + vnshndlr.getAlevntTodayEvents().get(i).getCountryCode() + ")");
+                if (alEvents.get(i).getCountryCode().compareTo("NZ") == 0) {
+                    bttnForArray.setText(bttnForArray.getText() + " (" + alEvents.get(i).getCountryCode() + ")");
                 }
-                albttnVenues.add(bttnForArray);
+                this.albttnVenues.add(bttnForArray);
             }
         }
-        if(albttnVenues.size() > 0) {
-            rl.addView(albttnVenues.get(0));
-            RelativeLayout.LayoutParams lpTopButton = (RelativeLayout.LayoutParams) albttnVenues.get(0).getLayoutParams();
-            lpTopButton.addRule(RelativeLayout.ALIGN_PARENT_TOP, albttnVenues.get(0).getId());
-            lpTopButton.addRule(RelativeLayout.CENTER_HORIZONTAL, albttnVenues.get(0).getId());
-            for (int i = 1; i < albttnVenues.size(); i++) {
-                rl.addView(albttnVenues.get(i));
-                RelativeLayout.LayoutParams lpBelowTopButton = (RelativeLayout.LayoutParams) albttnVenues.get(i).getLayoutParams();
-                lpBelowTopButton.addRule(RelativeLayout.BELOW, albttnVenues.get(i - 1).getId());
-                lpBelowTopButton.addRule(RelativeLayout.ALIGN_LEFT, albttnVenues.get(i - 1).getId());
-                albttnVenues.get(i).setLayoutParams(lpBelowTopButton);
+
+        if(this.albttnVenues.size() > 0) {
+            rl.addView(this.albttnVenues.get(0));
+            RelativeLayout.LayoutParams lpTopButton = (RelativeLayout.LayoutParams) this.albttnVenues.get(0).getLayoutParams();
+            lpTopButton.addRule(RelativeLayout.BELOW, this.spnnrRaceDates.getId());
+            lpTopButton.addRule(RelativeLayout.CENTER_HORIZONTAL, this.albttnVenues.get(0).getId());
+            lpTopButton.addRule(RelativeLayout.ALIGN_PARENT_LEFT, this.albttnVenues.get(0).getId());
+            lpTopButton.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, this.albttnVenues.get(0).getId());
+            for (int i = 1; i < this.albttnVenues.size(); i++) {
+                rl.addView(this.albttnVenues.get(i));
+                RelativeLayout.LayoutParams lpBelowTopButton = (RelativeLayout.LayoutParams) this.albttnVenues.get(i).getLayoutParams();
+                lpBelowTopButton.addRule(RelativeLayout.BELOW, this.albttnVenues.get(i - 1).getId());
+                lpBelowTopButton.addRule(RelativeLayout.ALIGN_PARENT_LEFT, this.albttnVenues.get(i).getId());
+                lpBelowTopButton.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, this.albttnVenues.get(i).getId());
+                this.albttnVenues.get(i).setLayoutParams(lpBelowTopButton);
             }
         }
         else{
-            txtvwNoRacesToday.setVisibility(View.VISIBLE);
+            if(this.strCurrentRaceDate.compareTo("Today") == 0){
+                this.txtvwNoRacesToday.setVisibility(View.VISIBLE);
+            }
+            else if(this.strCurrentRaceDate.compareTo("Tomorrow") == 0){
+                this.txtvwNoRacesTomorrow.setVisibility(View.VISIBLE);
+            }
         }
+
+        this.spnnrRaceDates.setVisibility(View.VISIBLE);
+        this.prgrssbrLoadingHorses.setVisibility(View.INVISIBLE);
+        scaleText();
     }
 
     public void getOnClickDoSomething(View button)  {
-        Log.d("thingy","ham");
+        Intent intntVenues = new Intent(this, RacesActivity.class);
+        intntVenues.putExtra("eventID", Integer.toString(button.getId()));
+        startActivity(intntVenues);
     }
 
     @Override

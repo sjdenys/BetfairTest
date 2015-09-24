@@ -11,10 +11,15 @@ import android.view.MenuItem;
 
 public class RacesActivity extends AppCompatActivity implements ActivityResponseListener {
 
+    private final RacesHandler rchndlr = new RacesHandler();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_races);
+        this.rchndlr.setActivityResponseListener(RacesActivity.this);
+        this.rchndlr.setStrEventId((String) getIntent().getStringExtra("eventID"));
+        this.rchndlr.sendRequestMarkets();
     }
 
     @Override
@@ -58,7 +63,9 @@ public class RacesActivity extends AppCompatActivity implements ActivityResponse
             Log.d("thingy", "error");
         }
         else {
-
+            Intent intntRunners = new Intent(this, RunnersActivity.class);
+            intntRunners.putExtra("market", this.rchndlr.getStrMarket());
+            startActivity(intntRunners);
         }
     }
 

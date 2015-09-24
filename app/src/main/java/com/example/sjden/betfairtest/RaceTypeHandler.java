@@ -4,7 +4,9 @@ import android.util.Log;
 
 import com.example.sjden.betfairtest.objects.Event;
 import com.example.sjden.betfairtest.objects.EventType;
+import com.example.sjden.betfairtest.objects.MarketBettingType;
 import com.example.sjden.betfairtest.objects.MarketCatalogue;
+import com.example.sjden.betfairtest.objects.MarketDescription;
 import com.example.sjden.betfairtest.objects.MarketFilter;
 import com.example.sjden.betfairtest.objects.TimeRange;
 import com.google.gson.Gson;
@@ -31,7 +33,7 @@ import java.util.Map;
  */
 public class RaceTypeHandler implements HTTPResponseListener  {
 
-    private APINGRequester requester;
+    private final APINGRequester apingrequester = new APINGRequester();
     private ActivityResponseListener actrspnslstnr;
     private String strRequestType;
 
@@ -63,8 +65,7 @@ public class RaceTypeHandler implements HTTPResponseListener  {
         this.strGreyhounds = new ArrayList<String>();
         this.intHorseCount = -1;
         this.intGreyhoundCount = -1;
-        this.requester = new APINGRequester();
-        this.requester.setHTTPResponseListener(RaceTypeHandler.this);
+        this.apingrequester.setHTTPResponseListener(RaceTypeHandler.this);
     }
 
     /**
@@ -84,7 +85,7 @@ public class RaceTypeHandler implements HTTPResponseListener  {
         jrr.setId("1");
         jrr.setMethod("SportsAPING/v1.0/listEvents");
         jrr.setParams(params);
-        requester.sendRequest(strRequestType, jrr);
+        apingrequester.sendRequest(strRequestType, jrr);
     }
 
     public void sendRequestGreyhoundEvents(){
@@ -95,7 +96,7 @@ public class RaceTypeHandler implements HTTPResponseListener  {
         jrr.setId("1");
         jrr.setMethod("SportsAPING/v1.0/listEvents");
         jrr.setParams(params);
-        requester.sendRequest(strRequestType, jrr);
+        apingrequester.sendRequest(strRequestType, jrr);
     }
 
     private MarketFilter getMarketFilterHorses(){
@@ -113,6 +114,10 @@ public class RaceTypeHandler implements HTTPResponseListener  {
         gcStartsBeforeTime.set(Calendar.MINUTE, 0);
         trRaceStartTimes.setTo(gcStartsBeforeTime.getTime());
         mrktfltr.setEventTypeIds(hsEventTypeIDs);
+        HashSet<String> hsstrMarketType = new HashSet<String>();
+        hsstrMarketType.add("PLACE");
+        hsstrMarketType.add("WIN");
+        mrktfltr.setMarketTypeCodes(hsstrMarketType);
         mrktfltr.setMarketStartTime(trRaceStartTimes);
         return mrktfltr;
     }
@@ -132,6 +137,10 @@ public class RaceTypeHandler implements HTTPResponseListener  {
         gcStartsBeforeTime.set(Calendar.MINUTE, 0);
         trRaceStartTimes.setTo(gcStartsBeforeTime.getTime());
         mrktfltr.setEventTypeIds(hsEventTypeIDs);
+        HashSet<String> hsstrMarketType = new HashSet<String>();
+        hsstrMarketType.add("PLACE");
+        hsstrMarketType.add("WIN");
+        mrktfltr.setMarketTypeCodes(hsstrMarketType);
         mrktfltr.setMarketStartTime(trRaceStartTimes);
         return mrktfltr;
     }
@@ -153,9 +162,7 @@ public class RaceTypeHandler implements HTTPResponseListener  {
                             try {
                                 JSONObject oneObject = jArray.getJSONObject(i);
                                 oneObject = new JSONObject(oneObject.getString("event"));
-                                if(!strHorses.contains("(AvB)")) {
-                                    strHorses.add(oneObject.toString());
-                                }
+                                strHorses.add(oneObject.toString());
                             } catch (JSONException e) {
                                 throw e;
                             }
@@ -176,9 +183,7 @@ public class RaceTypeHandler implements HTTPResponseListener  {
                             try {
                                 JSONObject oneObject = jArray.getJSONObject(i);
                                 oneObject = new JSONObject(oneObject.getString("event"));
-                                if(!strGreyhounds.contains("(AvB)")) {
-                                    strGreyhounds.add(oneObject.toString());
-                                }
+                                strGreyhounds.add(oneObject.toString());
                             } catch (JSONException e) {
                                 throw e;
                             }

@@ -22,34 +22,30 @@ import java.util.ArrayList;
 public class LoginActivity extends Activity implements ActivityResponseListener {
 
     private LoginHandler lgnhndlr = new LoginHandler();
-    RelativeLayout rl;
+    private ArrayList<String> alAcceptableUsernames = new ArrayList<>();
+    private RelativeLayout rl;
     private Button bttnLogIn;
     private EditText edttxtUsername;
     private EditText edttxtPassword;
     private CheckBox chckbxKeepLoggedIn;
-    ProgressDialog pdLoggingIn;
-    ArrayList<String> alAcceptableUsernames;
+    private ProgressDialog pdLoggingIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        lgnhndlr.setActivityResponseListener(LoginActivity.this);
-        rl = (RelativeLayout)findViewById(R.id.rlLoginLayout);
-        bttnLogIn = (Button)findViewById(R.id.bttnLogIn);
-        edttxtUsername = (EditText)findViewById(R.id.edttxtUsername);
-        edttxtPassword = (EditText)findViewById(R.id.edttxtPassword);
-        chckbxKeepLoggedIn = (CheckBox)findViewById(R.id.chckbxKeepLoggedIn);
-        pdLoggingIn = new ProgressDialog(LoginActivity.this);
-        pdLoggingIn.setMessage("Logging in...");
-        alAcceptableUsernames = new ArrayList<>();
+        this.lgnhndlr.setActivityResponseListener(LoginActivity.this);
+        this.rl = (RelativeLayout)findViewById(R.id.rlLoginLayout);
+        this.bttnLogIn = (Button)findViewById(R.id.bttnLogIn);
+        this.edttxtUsername = (EditText)findViewById(R.id.edttxtUsername);
+        this.edttxtPassword = (EditText)findViewById(R.id.edttxtPassword);
+        this.chckbxKeepLoggedIn = (CheckBox)findViewById(R.id.chckbxKeepLoggedIn);
+        this.pdLoggingIn = new ProgressDialog(LoginActivity.this);
+        this.pdLoggingIn.setMessage("Logging in...");
         for(int i = 1; i <= 6 ; i++){
             if(i != 2) {
-                alAcceptableUsernames.add("TestAPI" + i);
+                this.alAcceptableUsernames.add("TestAPI" + i);
             }
-        }
-        for (int i = 0; i < rl.getChildCount(); i++) {
-            rl.getChildAt(i).clearFocus();
         }
         scaleText();
     }
@@ -88,9 +84,10 @@ public class LoginActivity extends Activity implements ActivityResponseListener 
     }
 
     public void logIn(View view){
-        for (int i = 0; i < rl.getChildCount(); i++) {
-            rl.getChildAt(i).clearFocus();
-        }
+        SharedPreferences settings = this.getSharedPreferences("LoginDataFile", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.remove("username");
+        editor.remove("password");
         if(alAcceptableUsernames.contains(edttxtUsername.getText().toString())) {
             pdLoggingIn.show();
             lgnhndlr.sendLoginRequest(edttxtUsername.getText().toString(), edttxtPassword.getText().toString());

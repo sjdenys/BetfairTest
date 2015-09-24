@@ -122,7 +122,7 @@ public class APINGRequester {
                 httpurlcnnctn.setReadTimeout(15000);
                 httpurlcnnctn.setConnectTimeout(15000);
                 httpurlcnnctn.setRequestMethod("POST");
-                httpurlcnnctn.setRequestProperty("X-Application", "irAJdQSQfpqWMKIn");
+                httpurlcnnctn.setRequestProperty("X-Application", Constants.APP_KEY);
                 httpurlcnnctn.setRequestProperty("Content-Type", "application/json");
                 httpurlcnnctn.setRequestProperty("X-Authentication", APINGRequester.strSessionKey);
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
@@ -149,7 +149,7 @@ public class APINGRequester {
                     throw new HttpException(intResponseCode + "");
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.d("thingy",e.getMessage());
             }
             ArrayList<String> alResponse = new ArrayList<String>();
             alResponse.add(strRequestType);
