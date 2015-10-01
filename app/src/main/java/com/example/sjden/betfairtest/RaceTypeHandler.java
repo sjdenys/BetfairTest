@@ -119,6 +119,7 @@ public class RaceTypeHandler implements HTTPResponseListener  {
         hsstrMarketType.add("WIN");
         mrktfltr.setMarketTypeCodes(hsstrMarketType);
         mrktfltr.setMarketStartTime(trRaceStartTimes);
+        mrktfltr.setBspOnly(true);
         return mrktfltr;
     }
 
@@ -142,6 +143,7 @@ public class RaceTypeHandler implements HTTPResponseListener  {
         hsstrMarketType.add("WIN");
         mrktfltr.setMarketTypeCodes(hsstrMarketType);
         mrktfltr.setMarketStartTime(trRaceStartTimes);
+        mrktfltr.setBspOnly(true);
         return mrktfltr;
     }
 

@@ -46,6 +46,23 @@ public class SplashScreenActivity extends Activity implements ActivityResponseLi
                     prgrssbrLogin.setVisibility(View.VISIBLE);
                     LoginHandler lgnhndlr = new LoginHandler();
                     lgnhndlr.setActivityResponseListener(SplashScreenActivity.this);
+                    switch(settings.getString("username","f")){
+                        case "TestAPI1":
+                            APINGRequester.setStrAppKey("QVrWlekPUgCFgGTm");
+                            break;
+                        case "TestAPI3":
+                            APINGRequester.setStrAppKey("VrMZrllcdZbdWvgG");
+                            break;
+                        case "TestAPI4":
+                            APINGRequester.setStrAppKey("EjnCr4rFBdNgESdI");
+                            break;
+                        case "TestAPI5":
+                            APINGRequester.setStrAppKey("JYRDt5abFgNeTFr4");
+                            break;
+                        case "TestAPI6":
+                            APINGRequester.setStrAppKey("QAih9xYca97AKsZL");
+                            break;
+                    }
                     lgnhndlr.sendLoginRequest(settings.getString("username","f"),settings.getString("password","f"));
                 }
 

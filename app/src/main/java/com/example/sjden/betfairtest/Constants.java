@@ -8,7 +8,7 @@ public interface Constants {
 	public static final String HTTP_HEADER_ACCEPT = "Accept";
 	public static final String HTTP_HEADER_ACCEPT_CHARSET = "Accept-Charset";
 	public static final String HTTP_HEADER_X_APPLICATION = "X-Application";
-	public static final String APP_KEY = "QVrWlekPUgCFgGTm";
+	public static String APP_KEY = "QVrWlekPUgCFgGTm";
 	public static final String HTTP_HEADER_X_AUTHENTICATION = "X-Authentication";
 	public static final String HTTP_HEADER_X_ADMINISTRATOR = "X-Administrator";
 	public static final String HTTP_HEADER_X_PROXY_AUTHENTICATION = "X-Proxy-Authentication";

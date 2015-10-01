@@ -68,7 +68,7 @@ public class VenuesHandler implements HTTPResponseListener {
         GregorianCalendar gcEventDate = new GregorianCalendar();
         for(Event e : alevntEvents){
             gcEventDate.setTime(e.getOpenDate());
-            if(gcToday.get(Calendar.DAY_OF_YEAR) == gcEventDate.get(Calendar.DAY_OF_YEAR)){
+            if(gcToday.get(Calendar.DAY_OF_YEAR) >= gcEventDate.get(Calendar.DAY_OF_YEAR)){
                 alevntTodayEvents.add(e);
             }
             else{

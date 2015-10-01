@@ -1,5 +1,8 @@
 package com.example.sjden.betfairtest.objects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -196,4 +199,5 @@ public class Order {
             .append(sizeVoided)
             .toHashCode();
     }
+
 }

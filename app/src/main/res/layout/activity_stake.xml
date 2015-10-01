@@ -1,0 +1,195 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.sjden.betfairtest.StakeActivity"
+    android:id="@+id/rlStake"
+    android:background="@color/betfair_yellow">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/txtvwRunner"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/bttnSP"
+        android:layout_toStartOf="@+id/bttnSP" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/bttnSP"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/button_bet" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$10"
+        android:id="@+id/bttnStake10"
+        android:layout_alignStart="@+id/bttnStake250"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/bttnSP"
+        android:layout_centerHorizontal="true"
+        android:onClick="clickSelectAmount" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$20"
+        android:id="@+id/bttnStake20"
+        android:layout_toEndOf="@+id/bttnStake10"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentTop="false"
+        android:layout_below="@+id/bttnSP"
+        android:layout_toRightOf="@+id/bttnStake10"
+        android:onClick="clickSelectAmount" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$5"
+        android:id="@+id/bttnStake5"
+        android:layout_toStartOf="@+id/bttnStake10"
+        android:layout_marginRight="15dp"
+        android:layout_toLeftOf="@+id/bttnStake10"
+        android:layout_below="@+id/bttnSP"
+        android:layout_marginTop="15dp"
+        android:onClick="clickSelectAmount" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$25"
+        android:id="@+id/bttnStake25"
+        android:layout_below="@+id/bttnStake5"
+        android:layout_alignStart="@+id/bttnStake5"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_toLeftOf="@+id/bttnStake50"
+        android:onClick="clickSelectAmount" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$50"
+        android:id="@+id/bttnStake50"
+        android:layout_toStartOf="@+id/bttnStake20"
+        android:layout_below="@+id/bttnStake10"
+        android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true"
+        android:onClick="clickSelectAmount" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$75"
+        android:id="@+id/bttnStake75"
+        android:layout_below="@+id/bttnStake20"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@+id/bttnStake50"
+        android:layout_marginLeft="15dp"
+        android:onClick="clickSelectAmount" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$100"
+        android:id="@+id/bttnStake100"
+        android:layout_below="@+id/bttnStake25"
+        android:layout_alignStart="@+id/bttnStake25"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_toLeftOf="@+id/bttnStake250"
+        android:onClick="clickSelectAmount" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$1000"
+        android:id="@+id/bttnStake1000"
+        android:layout_below="@+id/bttnStake100"
+        android:layout_alignStart="@+id/bttnStake100"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_toLeftOf="@+id/bttnStake2500"
+        android:onClick="clickSelectAmount" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$250"
+        android:id="@+id/bttnStake250"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/bttnStake50"
+        android:onClick="clickSelectAmount" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$2500"
+        android:id="@+id/bttnStake2500"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/bttnStake250"
+        android:onClick="clickSelectAmount" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$500"
+        android:id="@+id/bttnStake500"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/bttnStake75"
+        android:layout_toRightOf="@+id/bttnStake250"
+        android:layout_marginLeft="15dp"
+        android:onClick="clickSelectAmount" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$5000"
+        android:id="@+id/bttnStake5000"
+        android:layout_below="@+id/bttnStake500"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@+id/bttnStake2500"
+        android:layout_marginLeft="15dp"
+        android:onClick="clickSelectAmount" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/edttxtBetAmount"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/bttnStake5000"
+        android:layout_alignRight="@+id/bttnStake5000"
+        android:layout_alignEnd="@+id/bttnStake5000"
+        android:layout_toEndOf="@+id/bttnStake2500"
+        android:layout_toRightOf="@+id/bttnStake2500"
+        android:background="@color/betfair_black" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Place Bet"
+        android:id="@+id/bttnPlaceBet"
+        android:layout_below="@+id/edttxtBetAmount"
+        android:layout_alignRight="@+id/edttxtBetAmount"
+        android:layout_alignEnd="@+id/edttxtBetAmount"
+        android:layout_marginTop="15dp"
+        android:layout_alignLeft="@+id/edttxtBetAmount"
+        android:layout_alignStart="@+id/edttxtBetAmount"
+        android:onClick="clickPlaceBet" />
+
+</RelativeLayout>

@@ -16,5 +16,6 @@
         <item>Tomorrow</item>
     </string-array>
     <string name="title_activity_runners">RunnersActivity</string>
+    <string name="title_activity_stake">StakeActivity</string>
 
 </resources>

@@ -41,6 +41,16 @@ public class APINGRequester {
 
     private String strHttpResponse;
     private static String strSessionKey = "";
+
+    public static String getStrAppKey() {
+        return strAppKey;
+    }
+
+    public static void setStrAppKey(String strAppKey) {
+        APINGRequester.strAppKey = strAppKey;
+    }
+
+    private static String strAppKey = "";
     private HTTPResponseListener listener;
 
     public APINGRequester() {
@@ -122,7 +132,7 @@ public class APINGRequester {
                 httpurlcnnctn.setReadTimeout(15000);
                 httpurlcnnctn.setConnectTimeout(15000);
                 httpurlcnnctn.setRequestMethod("POST");
-                httpurlcnnctn.setRequestProperty("X-Application", Constants.APP_KEY);
+                httpurlcnnctn.setRequestProperty("X-Application",  APINGRequester.strAppKey);
                 httpurlcnnctn.setRequestProperty("Content-Type", "application/json");
                 httpurlcnnctn.setRequestProperty("X-Authentication", APINGRequester.strSessionKey);
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
@@ -145,16 +155,18 @@ public class APINGRequester {
                     }
                 }
                 else {
-                    strResponse="";
                     throw new HttpException(intResponseCode + "");
                 }
             } catch (Exception e) {
                 Log.d("thingy",e.getMessage());
+                strResponse = e.getClass().getSimpleName();
             }
-            ArrayList<String> alResponse = new ArrayList<String>();
-            alResponse.add(strRequestType);
-            alResponse.add(strResponse);
-            return alResponse;
+            finally {
+                ArrayList<String> alResponse = new ArrayList<String>();
+                alResponse.add(strRequestType);
+                alResponse.add(strResponse);
+                return alResponse;
+            }
         }
 
         /**
@@ -163,6 +175,7 @@ public class APINGRequester {
          * @param strResponse: API response
          */
         protected void onPostExecute(ArrayList<String> strResponse){
+            Log.d("thingy",strResponse.get(1));
             listener.ResponseReceived(strResponse.get(0), strResponse.get(1));
         }
     }

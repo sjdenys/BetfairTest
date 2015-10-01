@@ -89,6 +89,24 @@ public class LoginActivity extends Activity implements ActivityResponseListener 
         editor.remove("username");
         editor.remove("password");
         if(alAcceptableUsernames.contains(edttxtUsername.getText().toString())) {
+            switch(edttxtUsername.getText().toString()){
+                case "TestAPI1":
+                    APINGRequester.setStrAppKey("QVrWlekPUgCFgGTm");
+                    Log.d("thingy",APINGRequester.getStrAppKey());
+                    break;
+                case "TestAPI3":
+                    APINGRequester.setStrAppKey("VrMZrllcdZbdWvgG");
+                    break;
+                case "TestAPI4":
+                    APINGRequester.setStrAppKey("EjnCr4rFBdNgESdI");
+                    break;
+                case "TestAPI5":
+                    APINGRequester.setStrAppKey("JYRDt5abFgNeTFr4");
+                    break;
+                case "TestAPI6":
+                    APINGRequester.setStrAppKey("QAih9xYca97AKsZL");
+                    break;
+            }
             pdLoggingIn.show();
             lgnhndlr.sendLoginRequest(edttxtUsername.getText().toString(), edttxtPassword.getText().toString());
         }

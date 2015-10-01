@@ -77,10 +77,21 @@ public class RacesHandler implements HTTPResponseListener {
         try {
             JSONObject jObject = new JSONObject(strResponseReceived);
             JSONArray jArray = new JSONArray(jObject.getString("result"));
-            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
-            for (int i = jArray.length() - 1; i >= 0 ; i--) {
+//            for (int i = jArray.length() - 1; i >= 0 ; i--) {
+//                try {
+//                    JSONObject oneObject = jArray.getJSONObject(i);
+//                    if(oneObject.get("marketName").toString().compareToIgnoreCase("To Be Placed") != 0){
+//                        this.strMarket = oneObject.toString();
+//                        break;
+//                    }
+//                } catch (Exception e) {
+//                    throw e;
+//                }
+//            }
+            for (int i = 0 ; i < jArray.length() ; i++) {
                 try {
                     JSONObject oneObject = jArray.getJSONObject(i);
+                    Log.d("thingy",oneObject.toString());
                     if(oneObject.get("marketName").toString().compareToIgnoreCase("To Be Placed") != 0){
                         this.strMarket = oneObject.toString();
                         break;

@@ -1,11 +1,14 @@
 package com.example.sjden.betfairtest.objects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public class Match {
+public class Match{
 
 	private String betId;
     private String matchId;
@@ -96,4 +99,5 @@ public class Match {
             .append(matchDate)
             .toHashCode();
     }
+
 }

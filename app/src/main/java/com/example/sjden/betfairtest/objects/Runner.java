@@ -1,5 +1,9 @@
 package com.example.sjden.betfairtest.objects;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
+
 import java.util.Date;
 import java.util.List;
 
@@ -18,8 +22,7 @@ public class Runner {
 	    private ExchangePrices ex;
 	    private List<Order> orders;
         private List<Match> matches;
-        
-	        
+
 	    public Long getSelectionId() {
 			return selectionId;
 		}
@@ -90,11 +93,6 @@ public class Runner {
 	    	return "{"+""+"selectionId="+getSelectionId()+","+"handicap="+getHandicap()+","+"status="+getStatus()+","+"adjustmentFactor="+getAdjustmentFactor()+","+"lastPriceTraded="+getLastPriceTraded()+","+"totalMatched="+getTotalMatched()+","+"removalDate="+getRemovalDate()+","+"sp="+getSp()+","+"ex="+getEx()+","+"orders="+getOrders()+","+"matches="+getMatches()+","+"}";
 	    }
 	    public Runner () {}
-	    
-	    
-
-		
-	    
 
 	    public boolean equals(Object o) {
 	        if (!(o instanceof Runner)) {
@@ -124,7 +122,7 @@ public class Runner {
 	    public int hashCode() {
 	        return new HashCodeBuilder()
 	            .append(selectionId)
-	            .append(handicap)
+					.append(handicap)
 	            .append(status)
 	            .append(adjustmentFactor)
 	            .append(lastPriceTraded)
@@ -133,7 +131,7 @@ public class Runner {
 	            .append(sp)
 	            .append(ex)
 	            .append(orders)
-	            .append(matches)
+					.append(matches)
 	            .toHashCode();
 	    }
 

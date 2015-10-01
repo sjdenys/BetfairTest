@@ -8,7 +8,9 @@ public class RunnerCatalog {
 	private Long selectionId;
     private String runnerName;
     private Double handicap;
-    
+
+    public RunnerCatalog(){}
+
     public Long getSelectionId() {
 		return selectionId;
 	}
@@ -61,5 +63,4 @@ public class RunnerCatalog {
             .append(handicap)
             .toHashCode();
     }
-
 }
