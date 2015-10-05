@@ -1,0 +1,54 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="${relativePackage}.${activityClass}"
+    android:background="@color/betfair_yellow"
+    android:clickable="false"
+    android:id="@+id/rlBetSuccess" >
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/bttnSP"
+        android:background="@drawable/button_bet"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/txtvwRunnerName"
+        android:layout_alignTop="@+id/bttnSP"
+        android:layout_toLeftOf="@+id/bttnSP"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TOTE Bet Placed"
+        android:id="@+id/txtvwToteBetPlaced"
+        android:layout_below="@+id/bttnSP"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"
+        android:layout_alignLeft="@+id/txtvwRunnerName"
+        android:layout_alignStart="@+id/txtvwRunnerName"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtvwConfirmText"
+        android:gravity="center"
+        android:layout_below="@+id/txtvwToteBetPlaced"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>

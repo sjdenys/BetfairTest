@@ -3,23 +3,30 @@ package com.example.sjden.betfairtest;
 import android.util.Log;
 
 import com.example.sjden.betfairtest.objects.Event;
+import com.example.sjden.betfairtest.objects.MarketBettingType;
 import com.example.sjden.betfairtest.objects.MarketFilter;
 import com.example.sjden.betfairtest.objects.MarketProjection;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 
 /**
  * Created by sjden on 16/09/2015.
@@ -64,11 +71,12 @@ public class VenuesHandler implements HTTPResponseListener {
     }
 
     public void sortAndDivideEvents(){
-        GregorianCalendar gcToday = new GregorianCalendar();
-        GregorianCalendar gcEventDate = new GregorianCalendar();
+        DateTime dtToday = new DateTime(DateTimeZone.forID("Australia/Sydney"));
+        DateTime dtEvent;
         for(Event e : alevntEvents){
-            gcEventDate.setTime(e.getOpenDate());
-            if(gcToday.get(Calendar.DAY_OF_YEAR) >= gcEventDate.get(Calendar.DAY_OF_YEAR)){
+            dtEvent = new DateTime(e.getOpenDate());
+            dtEvent = dtEvent.toDateTime(DateTimeZone.forID("Australia/Sydney"));
+            if(dtToday.getDayOfYear() >= dtEvent.getDayOfYear()){
                 alevntTodayEvents.add(e);
             }
             else{
@@ -116,7 +124,7 @@ public class VenuesHandler implements HTTPResponseListener {
         HashSet<Object> mp = new HashSet<Object>();
         mp.add(MarketProjection.EVENT);
         params.put("marketProjection",mp);
-        params.put("maxResults", 1000);
+        params.put("maxResults", alevntEvents.size() * 12);
         JSONRPCRequest jrr = new JSONRPCRequest();
         jrr.setId("1");
         jrr.setMethod("SportsAPING/v1.0/listMarketCatalogue");
@@ -131,7 +139,7 @@ public class VenuesHandler implements HTTPResponseListener {
         HashSet<Object> mp = new HashSet<Object>();
         mp.add(MarketProjection.EVENT);
         params.put("marketProjection",mp);
-        params.put("maxResults", 1000);
+        params.put("maxResults", alevntEvents.size() * 12);
         JSONRPCRequest jrr = new JSONRPCRequest();
         jrr.setId("1");
         jrr.setMethod("SportsAPING/v1.0/listMarketCatalogue");
@@ -146,6 +154,9 @@ public class VenuesHandler implements HTTPResponseListener {
             hsEventIDs.add(e.getId());
         }
         mrktfltr.setEventIds(hsEventIDs);
+        HashSet<String> mp = new HashSet<String>();
+        mp.add("WIN");
+        mrktfltr.setMarketTypeCodes(mp);
         return mrktfltr;
     }
 

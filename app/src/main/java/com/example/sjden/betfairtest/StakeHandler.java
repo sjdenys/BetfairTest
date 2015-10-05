@@ -9,6 +9,9 @@ import com.example.sjden.betfairtest.objects.OrderType;
 import com.example.sjden.betfairtest.objects.PlaceInstruction;
 import com.example.sjden.betfairtest.objects.Side;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +28,24 @@ public class StakeHandler implements HTTPResponseListener {
     private String strRequestType = "";
     private String strMarketID = "";
     private String strRunnerID = "";
+    private String strRunnerName = "";
+    private Double dblSP = 0.0;
+
+    public String getStrRunnerName() {
+        return strRunnerName;
+    }
+
+    public void setStrRunnerName(String strRunnerName) {
+        this.strRunnerName = strRunnerName;
+    }
+
+    public Double getDblSP() {
+        return dblSP;
+    }
+
+    public void setDblSP(Double dblSP) {
+        this.dblSP = dblSP;
+    }
 
     public StakeHandler(){
         this.apingrequester.setHTTPResponseListener(this);
@@ -51,11 +72,9 @@ public class StakeHandler implements HTTPResponseListener {
     }
 
     public void sendRequestPlaceOrder(Double dblAmount){
-        Log.d("thingy", dblAmount.toString());
         strRequestType = "placeOrders";
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("marketId",this.strMarketID);
-        Log.d("thingy", this.strMarketID);
         ArrayList<PlaceInstruction> alpiPlaceInstructions = new ArrayList<>();
         alpiPlaceInstructions.add(getOrder(dblAmount));
         params.put("instructions",alpiPlaceInstructions);
@@ -74,7 +93,6 @@ public class StakeHandler implements HTTPResponseListener {
         MarketOnCloseOrder mocoBet = new MarketOnCloseOrder();
         mocoBet.setLiability(dblAmount);
         piOrderInstructions.setMarketOnCloseOrder(mocoBet);
-        Log.d("thingy",piOrderInstructions.toString());
         return piOrderInstructions;
     }
 
@@ -83,7 +101,20 @@ public class StakeHandler implements HTTPResponseListener {
             actrspnslstnr.responseReceived(strResponseReceived);
         }
         else {
-            actrspnslstnr.responseReceived("success");
+            try
+            {
+                JSONObject jObject = new JSONObject(strResponseReceived);
+                if(jObject.has("error")){
+                    actrspnslstnr.responseReceived("error");
+                }
+                else{
+                    actrspnslstnr.responseReceived("success");
+                }
+            }
+            catch (JSONException e)
+            {
+                Log.d("thingy",e.getMessage());
+            }
         }
     }
 

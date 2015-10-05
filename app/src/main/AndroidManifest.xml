@@ -40,6 +40,10 @@
             android:name=".StakeActivity"
             android:label="@string/title_activity_stake" >
         </activity>
+        <activity
+            android:name=".BetSuccessActivity"
+            android:label="@string/title_activity_bet_success" >
+        </activity>
     </application>
 
 </manifest>

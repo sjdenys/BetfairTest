@@ -15,7 +15,12 @@
         <item>Today</item>
         <item>Tomorrow</item>
     </string-array>
+    <string-array name="market_array">
+        <item>Win</item>
+        <item>Place</item>
+    </string-array>
     <string name="title_activity_runners">RunnersActivity</string>
     <string name="title_activity_stake">StakeActivity</string>
+    <string name="title_activity_bet_success">BetSuccessActivity</string>
 
 </resources>

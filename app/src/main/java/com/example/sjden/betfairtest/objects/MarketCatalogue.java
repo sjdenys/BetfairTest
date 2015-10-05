@@ -1,5 +1,6 @@
 package com.example.sjden.betfairtest.objects;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -10,11 +11,20 @@ public class MarketCatalogue {
 	private String marketId;
     private String marketName;
     private MarketDescription description;
-    private List<RunnerCatalog> runners = null; 
+    private List<RunnerCatalog> runners = null;
     private EventType eventType;
     private Competition competition;
     private Event event;
-    
+    private Date marketStartTime;
+
+    public Date getMarketStartTime() {
+        return marketStartTime;
+    }
+
+    public void setMarketStartTime(Date marketStartTime) {
+        this.marketStartTime = marketStartTime;
+    }
+
 	public String getMarketId() {
 		return marketId;
 	}
@@ -72,19 +82,28 @@ public class MarketCatalogue {
 	}
 
 	public String toString() {
-		return getMarketName();
+        String strToString = "{";
+        strToString += "\"marketId\":";
+        strToString += "\"" + getMarketId() + "\"";
+        strToString += ",";
+        strToString += "\"marketName\":";
+        strToString += "\"" + getMarketName() + "\"";
+        strToString += ",";
+        strToString += "\"marketStartTime\":";
+        strToString += "\"" + getMarketStartTime() + "\"";
+		return strToString;
 	}
-	
+
 	public boolean equals(Object o) {
 	    if (!(o instanceof MarketCatalogue)) {
 	        return false;
 	    }
-	
+
 	    if (this == o) {
 	        return true;
 	    }
 	    MarketCatalogue another = (MarketCatalogue)o;
-	
+
 	    return new EqualsBuilder()
 	        .append(marketId, another.marketId)
 	        .append(marketName, another.marketName)
@@ -95,7 +114,7 @@ public class MarketCatalogue {
 	        .append(event, another.event)
 	        .isEquals();
 	}
-	
+
 	public int hashCode() {
 	    return new HashCodeBuilder()
 	        .append(marketId)

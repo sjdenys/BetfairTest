@@ -43,7 +43,7 @@ public class RaceTypeActivity extends AppCompatActivity implements ActivityRespo
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_master, menu);
+        getMenuInflater().inflate(R.menu.menu_race_type, menu);
         return true;
     }
 

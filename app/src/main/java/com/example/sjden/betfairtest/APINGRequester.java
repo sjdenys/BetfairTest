@@ -41,6 +41,9 @@ public class APINGRequester {
 
     private String strHttpResponse;
     private static String strSessionKey = "";
+    private static String strAppKey = "";
+    private HTTPResponseListener listener;
+
 
     public static String getStrAppKey() {
         return strAppKey;
@@ -49,9 +52,6 @@ public class APINGRequester {
     public static void setStrAppKey(String strAppKey) {
         APINGRequester.strAppKey = strAppKey;
     }
-
-    private static String strAppKey = "";
-    private HTTPResponseListener listener;
 
     public APINGRequester() {
         this.strHttpResponse = null;

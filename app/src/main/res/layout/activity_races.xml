@@ -4,6 +4,19 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.example.sjden.betfairtest.RacesActivity">
+    tools:context="com.example.sjden.betfairtest.RacesActivity"
+    android:id="@+id/rlRaces"
+    android:background="@color/betfair_yellow">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name of Venue"
+        android:id="@+id/txtvwRacesVenueName"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible" />
+
+
 
 </RelativeLayout>

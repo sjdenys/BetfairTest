@@ -24,6 +24,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.sjden.betfairtest.objects.MarketCatalogue;
@@ -38,11 +39,13 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class RunnersActivity extends AppCompatActivity implements ActivityResponseListener {
+public class RunnersActivity extends AppCompatActivity implements ActivityResponseListener, AdapterView.OnItemSelectedListener {
 
     private final RunnersHandler rnnrshndlr = new RunnersHandler();
     private ListView lstvwRunners;
     private ArrayAdapter<RunnerCatalog> adapter;
+    private Spinner spnnrMarket;
+    private boolean boolFirstRun = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +81,36 @@ public class RunnersActivity extends AppCompatActivity implements ActivityRespon
 
     public void initialiseUIElements(){
         this.lstvwRunners = (ListView)findViewById(R.id.lstvwRunners);
+        this.spnnrMarket = (Spinner) findViewById(R.id.spnnrMarket);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.market_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        this.spnnrMarket.setAdapter(adapter);
+        this.spnnrMarket.setOnItemSelectedListener(this);
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        if(!boolFirstRun) {
+            if(this.spnnrMarket.getSelectedItem().toString().compareTo("Win") == 0) {
+                this.adapter = new RunnersArrayAdapter(this, this.rnnrshndlr.getAlrcRunnerCatalog(), this.rnnrshndlr.getAlrnnrRunners());
+                this.rnnrshndlr.setStrMarketId(this.rnnrshndlr.getStrWinMarketId());
+            }
+            else{
+                this.adapter = new RunnersArrayAdapter(this, this.rnnrshndlr.getAlrcRunnerCatalog(), this.rnnrshndlr.getAlrnnrPlaceRunners());
+                this.rnnrshndlr.setStrMarketId(this.rnnrshndlr.getStrPlaceMarketId());
+            }
+            this.lstvwRunners.setAdapter(adapter);
+        }
+        else{
+            boolFirstRun = false;
+        }
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        Log.d("thingy", "none");
     }
 
     public void getOnClickDoSomething(View button)  {
@@ -89,12 +122,19 @@ public class RunnersActivity extends AppCompatActivity implements ActivityRespon
                 rcSelection = rc;
             }
         }
-        for(Runner r : this.rnnrshndlr.getAlrnnrRunners()){
+        ArrayList<Runner> alrRunner;
+        if(this.spnnrMarket.getSelectedItem().toString().compareToIgnoreCase("Win") == 0) {
+            alrRunner = this.rnnrshndlr.getAlrnnrRunners();
+        }
+        else{
+            alrRunner = this.rnnrshndlr.getAlrnnrPlaceRunners();
+        }
+        for(Runner r : alrRunner){
             if(r.getSelectionId().toString().compareTo(button.getTag().toString()) == 0){
                 rnnrSelection = r;
             }
         }
-
+        Log.d("thingy",this.rnnrshndlr.getStrMarketId());
         intntVenues.putExtra("marketID",this.rnnrshndlr.getStrMarketId());
         intntVenues.putExtra("selectionRunnerName", rcSelection.getRunnerName());
         intntVenues.putExtra("selectionRunnerId", rcSelection.getSelectionId().toString());
@@ -110,9 +150,10 @@ public class RunnersActivity extends AppCompatActivity implements ActivityRespon
     private void parseMarkets(){
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
         try {
-            JSONObject jObject = new JSONObject((String) getIntent().getStringExtra("market"));
-            this.rnnrshndlr.setStrMarketId(jObject.getString("marketId"));
-            JSONArray jArray = jObject.getJSONArray("runners");
+            JSONArray jArray = new JSONArray((String) getIntent().getStringExtra("runners"));
+            this.rnnrshndlr.setStrMarketId((String) getIntent().getStringExtra("marketId"));
+            this.rnnrshndlr.setStrWinMarketId((String) getIntent().getStringExtra("marketId"));
+            this.rnnrshndlr.setStrPlaceMarketId((String) getIntent().getStringExtra("placeMarketId"));
             for (int i = 0; i < jArray.length(); i++) {
                 try {
                     this.rnnrshndlr.getAlrcRunnerCatalog().add(gson.fromJson(jArray.getJSONObject(i).toString(), RunnerCatalog.class));
@@ -136,6 +177,9 @@ public class RunnersActivity extends AppCompatActivity implements ActivityRespon
             Log.d("thingy", "problem");
         }
         else{
+            if(this.rnnrshndlr.getAlrnnrPlaceRunners().size() == 0){
+                this.spnnrMarket.setEnabled(false);
+            }
             this.adapter = new RunnersArrayAdapter(this, this.rnnrshndlr.getAlrcRunnerCatalog(), this.rnnrshndlr.getAlrnnrRunners());
             this.lstvwRunners.setAdapter(adapter);
         }
@@ -172,19 +216,18 @@ public class RunnersActivity extends AppCompatActivity implements ActivityRespon
             String s = alrnnrRunnersCatalog.get(position).getRunnerName();
             textView.setText(s);
             for(Runner r : alrnnrRunners){
-                Log.d("thingy",r.toString());
                 if(r.getSelectionId().compareTo(alrnnrRunnersCatalog.get(position).getSelectionId()) == 0) {
                     if (r.getStatus().compareToIgnoreCase("Active") != 0){
                         textView.setTextColor(Color.GRAY);
                         imageView.setText("Scratched");
                         imageView.setEnabled(false);
                     }
-                    else if(r.getSp() == null || r.getSp().getNearPrice() == null ||r.getSp().getNearPrice() == Double.POSITIVE_INFINITY){
+                    else if(r.getSp() == null || r.getSp().getNearPrice() == null || r.getSp().getNearPrice().isNaN() || r.getSp().getNearPrice() == Double.POSITIVE_INFINITY){
                         imageView.setText("-");
                     }
                     else {
-                        String strSP = String.format("%.2f", r.getSp().getNearPrice());
-                        imageView.setText(strSP);
+                        DecimalFormat dfSP = new DecimalFormat("#.##");
+                        imageView.setText(dfSP.format(r.getSp().getNearPrice()));
                     }
                 }
             }

@@ -31,19 +31,39 @@ public class RunnersHandler implements HTTPResponseListener{
     private final ArrayList<RunnerCatalog> alrcRunnerCatalog = new ArrayList<>();
 
     private final ArrayList<Runner> alrnnrRunners = new ArrayList<>();
+    private final ArrayList<Runner> alrnnrPlaceRunners = new ArrayList<>();
     private String strRequestType = "";
+    private String strWinMarketId = "";
+    private String strPlaceMarketId = "";
     private String strMarketId = "";
 
     public RunnersHandler(){
         this.apingrequester.setHTTPResponseListener(RunnersHandler.this);
     }
 
+
     public String getStrMarketId() {
-        return this.strMarketId;
+        return strMarketId;
     }
 
     public void setStrMarketId(String strMarketId) {
         this.strMarketId = strMarketId;
+    }
+
+    public String getStrWinMarketId() {
+        return this.strWinMarketId;
+    }
+
+    public void setStrWinMarketId(String strMarketId) {
+        this.strWinMarketId = strMarketId;
+    }
+
+    public String getStrPlaceMarketId() {
+        return this.strPlaceMarketId;
+    }
+
+    public void setStrPlaceMarketId(String strPlaceMarketId) {
+        this.strPlaceMarketId = strPlaceMarketId;
     }
 
     public ArrayList<RunnerCatalog> getAlrcRunnerCatalog() {
@@ -54,6 +74,12 @@ public class RunnersHandler implements HTTPResponseListener{
         return alrnnrRunners;
     }
 
+
+    public ArrayList<Runner> getAlrnnrPlaceRunners() {
+        return alrnnrPlaceRunners;
+    }
+
+
     public void setActivityResponseListener(ActivityResponseListener actrspnslstnr) {
         this.actrspnslstnr = actrspnslstnr;
     }
@@ -62,7 +88,8 @@ public class RunnersHandler implements HTTPResponseListener{
         this.strRequestType = "listMarketBook";
         Map<String, Object> params = new HashMap<String, Object>();
         ArrayList<String> alstrMarketIDs = new ArrayList<String>();
-        alstrMarketIDs.add(this.strMarketId);
+        alstrMarketIDs.add(this.strWinMarketId);
+        alstrMarketIDs.add(this.strPlaceMarketId);
         params.put("marketIds", alstrMarketIDs);
         PriceProjection pp = new PriceProjection();
         HashSet<PriceData> pd = new HashSet<>();
@@ -86,11 +113,22 @@ public class RunnersHandler implements HTTPResponseListener{
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
                 JSONObject jObject = new JSONObject(strResponseReceived);
                 JSONArray jArray = new JSONArray(jObject.getString("result"));
-                jObject = jArray.getJSONObject(0);
-                jArray = new JSONArray(jObject.getString("runners"));
+                JSONArray jaRunners;
+                JSONObject joMarket;
                 for (int i = 0; i < jArray.length(); i++) {
+                    joMarket = jArray.getJSONObject(i);
+                    String strMarketId = joMarket.getString("marketId");
+                    jaRunners = new JSONArray(joMarket.getString("runners"));
                     try {
-                        this.alrnnrRunners.add(gson.fromJson(jArray.getJSONObject(i).toString(), Runner.class));
+                        if(strMarketId.compareTo(strWinMarketId) == 0){
+                            for (int j = 0; j < jaRunners.length(); j++) {
+                                this.alrnnrRunners.add(gson.fromJson(jaRunners.getJSONObject(j).toString(), Runner.class));
+                            }
+                        }
+                        else{
+                            for (int j = 0; j < jaRunners.length(); j++) {
+                                this.alrnnrPlaceRunners.add(gson.fromJson(jaRunners.getJSONObject(j).toString(), Runner.class));
+                            }                        }
                     } catch (JSONException e) {
                         throw e;
                     }
