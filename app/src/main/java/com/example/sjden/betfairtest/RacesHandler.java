@@ -95,6 +95,10 @@ public class RacesHandler implements HTTPResponseListener {
         hsEventIDs.add(this.strEventID); //This is the ID returned by the venue selection on the previous activity
         mrktfltr.setEventIds(hsEventIDs);
         mrktfltr.setBspOnly(true);
+        HashSet<String> hsstrMarketType = new HashSet<String>();
+        hsstrMarketType.add("PLACE");
+        hsstrMarketType.add("WIN");
+        mrktfltr.setMarketTypeCodes(hsstrMarketType);
         return mrktfltr;
     }
 

@@ -3,8 +3,10 @@ package com.example.sjden.betfairtest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -33,6 +35,7 @@ public class RaceTypeActivity extends AppCompatActivity implements ActivityRespo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_race_type);
+        getSupportActionBar().setTitle("Betfair");
         initialiseUIElements();
         scaleText();
         rctyphndlr.setActivityResponseListener(RaceTypeActivity.this);
@@ -43,7 +46,8 @@ public class RaceTypeActivity extends AppCompatActivity implements ActivityRespo
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_race_type, menu);
+        getMenuInflater().inflate(R.menu.menu_master, menu);
+        //getActionBar().setDisplayHomeAsUpEnabled(false);
         return true;
     }
 
@@ -55,8 +59,21 @@ public class RaceTypeActivity extends AppCompatActivity implements ActivityRespo
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_log_out) {
+            // We need an Editor object to make preference changes.
+            // All objects are from android.context.Context
+            SharedPreferences settings = this.getSharedPreferences("LoginDataFile", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.remove("username");
+            editor.remove("password");
+            // Commit the edits!
+            editor.apply();
+            APINGRequester.setStrSessionKey("");
+            /** on your logout method:**/
+            Intent startNewIntent = new Intent(this, LoginActivity.class);
+            startNewIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(startNewIntent);
+            finish();
         }
 
         return super.onOptionsItemSelected(item);

@@ -5,7 +5,8 @@
     tools:context="${relativePackage}.${activityClass}"
     android:background="@color/betfair_yellow"
     android:clickable="false"
-    android:id="@+id/rlLoginLayout">
+    android:id="@+id/rlLoginLayout"
+    style="@style/AppTheme">
 
     <EditText
         android:layout_width="match_parent"
@@ -42,11 +43,9 @@
         android:id="@+id/bttnLogIn"
         android:onClick="logIn"
         android:textColor="#000000"
-        android:height="48dp"
         android:layout_alignTop="@+id/chckbxKeepLoggedIn"
         android:layout_alignRight="@+id/edttxtPassword"
-        android:layout_alignEnd="@+id/edttxtPassword"
-        android:background="@android:drawable/btn_default" />
+        android:layout_alignEnd="@+id/edttxtPassword" />
 
     <TextView
         android:layout_width="wrap_content"

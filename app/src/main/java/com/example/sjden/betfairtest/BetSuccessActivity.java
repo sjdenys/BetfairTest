@@ -29,6 +29,7 @@ public class BetSuccessActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bet_success);
+        getSupportActionBar().setTitle("Betfair");
         this.bsh.setStrRunnerName(getIntent().getStringExtra("runnerName"));
         this.bsh.setDblSP(getIntent().getDoubleExtra("runnerSP", 0.00));
         this.bsh.setDblLiability(Double.parseDouble(getIntent().getStringExtra("liability")));

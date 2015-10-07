@@ -1,6 +1,9 @@
 package com.example.sjden.betfairtest;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -22,16 +25,15 @@ public class StakeActivity extends AppCompatActivity implements ActivityResponse
     private TextView txtvwRunner;
     private Button bttnSP;
     private EditText edttxtBetAmount;
+    private ProgressDialog pdLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stake);
-        Log.d("thingy", "bong");
+        getSupportActionBar().setTitle("Betfair");
         this.stkhndlr.setActivityResponseListener(this);
-        Log.d("thingy",getIntent().getStringExtra("marketID"));
         this.stkhndlr.setStrMarketID(getIntent().getStringExtra("marketID"));
-        Log.d("thingy", this.stkhndlr.getStrMarketID());
         this.stkhndlr.setStrRunnerID(getIntent().getStringExtra("selectionRunnerId"));
         this.stkhndlr.setStrRunnerName(getIntent().getStringExtra("selectionRunnerName"));
         this.stkhndlr.setDblSP(Double.parseDouble(getIntent().getStringExtra("selectionSP")));
@@ -80,6 +82,9 @@ public class StakeActivity extends AppCompatActivity implements ActivityResponse
         this.txtvwRunner.setText(this.stkhndlr.getStrRunnerName());
         DecimalFormat dfFormattedSP = new DecimalFormat("#.##");
         this.bttnSP.setText(dfFormattedSP.format(this.stkhndlr.getDblSP()));
+        this.pdLoading = new ProgressDialog(StakeActivity.this);
+        this.pdLoading.setMessage("Placing bet...");
+        this.pdLoading.setCancelable(false);
     }
 
     public void clickSelectAmount(View view){
@@ -88,6 +93,7 @@ public class StakeActivity extends AppCompatActivity implements ActivityResponse
     }
 
     public void clickPlaceBet(View view){
+        this.pdLoading.show();
         this.stkhndlr.sendRequestPlaceOrder(new Double(this.edttxtBetAmount.getText().toString()));
     }
 

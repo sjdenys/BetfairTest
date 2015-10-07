@@ -5,7 +5,8 @@
     tools:context="${relativePackage}.${activityClass}"
     android:background="@color/betfair_yellow"
     android:clickable="false"
-    android:id="@+id/rlRaceType" >
+    android:id="@+id/rlRaceType"
+    style="@style/AppTheme">
 
     <Button
         android:layout_width="fill_parent"
@@ -14,8 +15,7 @@
         android:id="@+id/bttnHarness"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:onClick="listHarness"
-        android:background="@android:drawable/btn_default"/>
+        android:onClick="listHarness" />
 
     <Button
         android:layout_width="fill_parent"
@@ -28,8 +28,7 @@
         android:layout_alignRight="@+id/bttnHarness"
         android:layout_alignEnd="@+id/bttnHarness"
         android:layout_marginTop="30dp"
-        android:onClick="listGreyhounds"
-        android:background="@android:drawable/btn_default" />
+        android:onClick="listGreyhounds" />
 
     <Button
         android:layout_width="fill_parent"
@@ -42,7 +41,6 @@
         android:layout_alignRight="@+id/bttnHarness"
         android:layout_alignEnd="@+id/bttnHarness"
         android:layout_marginBottom="30dp"
-        android:onClick="listThoroughbreds"
-        android:background="@android:drawable/btn_default"/>
+        android:onClick="listThoroughbreds" />
 
 </RelativeLayout>

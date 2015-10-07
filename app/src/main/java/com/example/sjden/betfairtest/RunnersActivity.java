@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
@@ -46,11 +48,13 @@ public class RunnersActivity extends AppCompatActivity implements ActivityRespon
     private ArrayAdapter<RunnerCatalog> adapter;
     private Spinner spnnrMarket;
     private boolean boolFirstRun = true;
+    private ProgressBar prgrssbrLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_runners);
+        getSupportActionBar().setTitle("Betfair");
         initialiseUIElements();
         this.rnnrshndlr.setActivityResponseListener(RunnersActivity.this);
         parseMarkets();
@@ -60,7 +64,8 @@ public class RunnersActivity extends AppCompatActivity implements ActivityRespon
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_runners, menu);
+        getMenuInflater().inflate(R.menu.menu_master, menu);
+        //getActionBar().setDisplayHomeAsUpEnabled(false);
         return true;
     }
 
@@ -72,14 +77,28 @@ public class RunnersActivity extends AppCompatActivity implements ActivityRespon
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_log_out) {
+            // We need an Editor object to make preference changes.
+            // All objects are from android.context.Context
+            SharedPreferences settings = this.getSharedPreferences("LoginDataFile", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.remove("username");
+            editor.remove("password");
+            // Commit the edits!
+            editor.apply();
+            APINGRequester.setStrSessionKey("");
+            /** on your logout method:**/
+            Intent startNewIntent = new Intent(this, LoginActivity.class);
+            startNewIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(startNewIntent);
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     public void initialiseUIElements(){
+        this.prgrssbrLoading = (ProgressBar)findViewById(R.id.prgrssbrLoading);
         this.lstvwRunners = (ListView)findViewById(R.id.lstvwRunners);
         this.spnnrMarket = (Spinner) findViewById(R.id.spnnrMarket);
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -180,6 +199,8 @@ public class RunnersActivity extends AppCompatActivity implements ActivityRespon
             if(this.rnnrshndlr.getAlrnnrPlaceRunners().size() == 0){
                 this.spnnrMarket.setEnabled(false);
             }
+            this.spnnrMarket.setVisibility(View.VISIBLE);
+            this.prgrssbrLoading.setVisibility(View.INVISIBLE);
             this.adapter = new RunnersArrayAdapter(this, this.rnnrshndlr.getAlrcRunnerCatalog(), this.rnnrshndlr.getAlrnnrRunners());
             this.lstvwRunners.setAdapter(adapter);
         }

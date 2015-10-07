@@ -38,11 +38,12 @@
         android:layout_below="@+id/bttnSP"
         android:layout_marginTop="20dp"
         android:textStyle="bold"
-        android:layout_alignLeft="@+id/txtvwRunnerName"
         android:layout_alignStart="@+id/txtvwRunnerName"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:gravity="center" />
+        android:gravity="center"
+        android:layout_alignParentLeft="true"
+        android:textSize="20sp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -50,5 +51,8 @@
         android:id="@+id/txtvwConfirmText"
         android:gravity="center"
         android:layout_below="@+id/txtvwToteBetPlaced"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:textSize="20sp" />
 </RelativeLayout>

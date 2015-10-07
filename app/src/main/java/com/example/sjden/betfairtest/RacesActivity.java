@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ public class RacesActivity extends AppCompatActivity implements ActivityResponse
 
     private RacesHandler rcshndlr = new RacesHandler();
     private RelativeLayout rl;
+    private ProgressBar prgrssbrLoading;
     private TextView txtvwRacesVenueName;
     private ArrayList<Button> raceButtons;
 
@@ -41,6 +43,7 @@ public class RacesActivity extends AppCompatActivity implements ActivityResponse
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_races);
+        getSupportActionBar().setTitle("Betfair");
         initialiseUIElements();
         rcshndlr.setActivityResponseListener(RacesActivity.this);
         this.rcshndlr.setStrEventID(getIntent().getStringExtra("eventID"));
@@ -85,6 +88,7 @@ public class RacesActivity extends AppCompatActivity implements ActivityResponse
     public void initialiseUIElements() {
         this.rl = (RelativeLayout) findViewById(R.id.rlRaces);
         this.txtvwRacesVenueName = (TextView) findViewById(R.id.txtvwRacesVenueName);
+        this.prgrssbrLoading = (ProgressBar) findViewById(R.id.prgrssbrLoading);
     }
 
     public void createRaceButtons() {
@@ -154,6 +158,7 @@ public class RacesActivity extends AppCompatActivity implements ActivityResponse
             Log.d("thingy", "error");
         }
         else {
+            prgrssbrLoading.setVisibility(View.INVISIBLE);
             createRaceButtons();
         }
     }

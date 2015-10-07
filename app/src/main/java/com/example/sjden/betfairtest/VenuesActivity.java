@@ -42,6 +42,7 @@ public class VenuesActivity extends AppCompatActivity implements ActivityRespons
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue);
+        getSupportActionBar().setTitle("Betfair");
         initialiseUIElements();
         vnshndlr.setActivityResponseListener(VenuesActivity.this);
         vnshndlr.setAlevntEvents(loadEventArray((ArrayList<String>) getIntent().getSerializableExtra("events")));
