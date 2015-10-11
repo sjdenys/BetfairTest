@@ -55,4 +55,24 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:textSize="20sp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Return to Racing"
+        android:id="@+id/bttnReturnRacing"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="returnToRacing" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show All Bets"
+        android:id="@+id/bttnShowBets"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:onClick="showAllBets" />
 </RelativeLayout>

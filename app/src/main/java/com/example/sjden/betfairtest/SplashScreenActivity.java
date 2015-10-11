@@ -63,6 +63,7 @@ public class SplashScreenActivity extends Activity implements ActivityResponseLi
                             APINGRequester.setStrAppKey("QAih9xYca97AKsZL");
                             break;
                     }
+                    APINGAccountRequester.setDblAusBalance((double)settings.getLong("balance",0));
                     lgnhndlr.sendLoginRequest(settings.getString("username","f"),settings.getString("password","f"));
                 }
 
@@ -72,6 +73,10 @@ public class SplashScreenActivity extends Activity implements ActivityResponseLi
 
     public void responseReceived(String strResponseReceived) {
         if(strResponseReceived.compareTo("SUCCESS") == 0){
+            SharedPreferences spSettings = this.getSharedPreferences("LoginDataFile", Context.MODE_PRIVATE);
+            SharedPreferences.Editor speEditor = spSettings.edit();
+            speEditor.putLong("balance", Double.doubleToRawLongBits(APINGAccountRequester.getDblAusBalance()));
+            speEditor.apply();
             Intent intnt = new Intent(this, RaceTypeActivity.class);
             startActivity(intnt);
             finish();

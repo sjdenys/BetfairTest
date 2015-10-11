@@ -10,13 +10,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 
 public class LoginActivity extends Activity implements ActivityResponseListener {
@@ -29,6 +30,7 @@ public class LoginActivity extends Activity implements ActivityResponseListener 
     private EditText edttxtPassword;
     private CheckBox chckbxKeepLoggedIn;
     private ProgressDialog pdLoggingIn;
+    private Menu mnMaster;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,14 @@ public class LoginActivity extends Activity implements ActivityResponseListener 
             }
         }
         scaleText();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        this.mnMaster = menu;
+        getMenuInflater().inflate(R.menu.menu_master, menu);
+        return true;
     }
 
     public void scaleText() {
@@ -88,11 +98,11 @@ public class LoginActivity extends Activity implements ActivityResponseListener 
         SharedPreferences.Editor editor = settings.edit();
         editor.remove("username");
         editor.remove("password");
+        editor.remove("balance");
         if(alAcceptableUsernames.contains(edttxtUsername.getText().toString())) {
             switch(edttxtUsername.getText().toString()){
                 case "TestAPI1":
                     APINGRequester.setStrAppKey("QVrWlekPUgCFgGTm");
-                    Log.d("thingy",APINGRequester.getStrAppKey());
                     break;
                 case "TestAPI3":
                     APINGRequester.setStrAppKey("VrMZrllcdZbdWvgG");
@@ -144,6 +154,7 @@ public class LoginActivity extends Activity implements ActivityResponseListener 
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("username", edttxtUsername.getText().toString());
                 editor.putString("password", edttxtPassword.getText().toString());
+                editor.putLong("balance", Double.doubleToRawLongBits(APINGAccountRequester.getDblAusBalance()));
                 // Commit the edits!
                 editor.apply();
             }

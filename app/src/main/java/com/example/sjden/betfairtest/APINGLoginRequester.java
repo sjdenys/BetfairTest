@@ -116,7 +116,7 @@ public class APINGLoginRequester {
                 httpurlcnnctn.setConnectTimeout(15000);
                 httpurlcnnctn.setRequestMethod("POST");
                 httpurlcnnctn.setRequestProperty("Accept", "application/json");
-                httpurlcnnctn.setRequestProperty("X-Application", Constants.APP_KEY);
+                httpurlcnnctn.setRequestProperty("X-Application", APINGRequester.getStrAppKey());
                 httpurlcnnctn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
                 OutputStream otptstrm = httpurlcnnctn.getOutputStream();

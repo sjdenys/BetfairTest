@@ -1,9 +1,11 @@
 package com.example.sjden.betfairtest;
 
-import com.example.sjden.betfairtest.objects.MarketFilter;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 
+import org.json.JSONObject;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 /**
@@ -12,15 +14,18 @@ import java.util.Map;
 public class LoginHandler implements HTTPResponseListener {
 
     private APINGRequester requester;
+    private APINGAccountRequester accountRequester = new APINGAccountRequester();
     private APINGLoginRequester loginRequester;
     private String strRequestType;
     private ActivityResponseListener actrspnslstnr;
+    private HashMap<String,String> hmJSON = new HashMap<>();
 
     public LoginHandler(){
         this.requester = new APINGRequester();
         this.loginRequester = new APINGLoginRequester();
-        requester.setHTTPResponseListener(LoginHandler.this);
-        loginRequester.setHTTPResponseListener(LoginHandler.this);
+        this.requester.setHTTPResponseListener(LoginHandler.this);
+        this.loginRequester.setHTTPResponseListener(LoginHandler.this);
+        this.accountRequester.setHTTPResponseListener(LoginHandler.this);
     }
 
     /**
@@ -40,44 +45,54 @@ public class LoginHandler implements HTTPResponseListener {
         loginRequester.sendRequest("https://identitysso.betfair.com/api/login", hshmpParameters);
     }
 
+    public void requestAUSAccountFunds() {
+        strRequestType = "getAccountFunds";
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("wallet", "AUSTRALIAN");
+        JSONRPCRequest jrr = new JSONRPCRequest();
+        jrr.setMethod(Constants.ACCOUNT_APING_V1_0 + "getAccountFunds");
+        jrr.setParams(params);
+        jrr.setId("1");
+        accountRequester.sendRequest(strRequestType, jrr);
+    }
+
     @Override
     public void ResponseReceived(String strRequestType, String strResponseReceived) {
         String strSessionToken = "";
         String strStatus = "";
-        HashMap<String,String> hmJSON = new HashMap<>();
-        strResponseReceived = strResponseReceived.replace("{", "").replace("}", "");
-        String[] strResponseFields = strResponseReceived.split(",");
+        String strLoginResponse = strResponseReceived.replace("{", "").replace("}", "");
+        String[] strResponseFields = strLoginResponse.split(",");
         if(strResponseReceived.endsWith("Exception")){
             actrspnslstnr.responseReceived(strResponseReceived);
         }
         else {
-            for (String s : strResponseFields) {
-                hmJSON.put(s.split(":")[0].replace("\"", ""),s.split(":")[1].replace("\"", "")) ;
+            if(this.strRequestType.compareTo("login") == 0) {
+                for (String s : strResponseFields) {
+                    hmJSON.put(s.split(":")[0].replace("\"", ""), s.split(":")[1].replace("\"", ""));
+                }
+                if (strRequestType.compareTo("login") == 0) {
+                    if (hmJSON.get("status").compareTo("SUCCESS") == 0) {
+                        APINGRequester.setStrSessionKey(hmJSON.get("token"));
+                        APINGAccountRequester.setStrSessionKey(hmJSON.get("token"));
+                        requestAUSAccountFunds();
+                    } else {
+                        actrspnslstnr.responseReceived(hmJSON.get("error"));
+                    }
+                }
             }
-            if (strRequestType.compareTo("login") == 0) {
-                if (hmJSON.get("status").compareTo("SUCCESS") == 0) {
-                    APINGRequester.setStrSessionKey(hmJSON.get("token"));
+            else{
+                try {
+                    JSONObject jObject = new JSONObject(strResponseReceived);
+                    JSONObject jResult = new JSONObject(jObject.getString("result"));
+                    APINGAccountRequester.setDblAusBalance(jResult.getDouble("availableToBetBalance"));
                     actrspnslstnr.responseReceived(hmJSON.get("status"));
-                } else {
-                    actrspnslstnr.responseReceived(hmJSON.get("error"));
+                }
+                catch(Exception e){
+                    Log.d("thingy",e.getMessage());
+                    actrspnslstnr.responseReceived(e.getMessage());
                 }
             }
         }
-    }
-
-    public class LoginResponse {
-        public String product;
-        public String error;
-        public String token;
-        public int status;
-
-        public LoginResponse() {
-            this.product = "";
-            this.error="";
-            this.token = "";
-            this.status = 0;
-        }
-
     }
 
 }

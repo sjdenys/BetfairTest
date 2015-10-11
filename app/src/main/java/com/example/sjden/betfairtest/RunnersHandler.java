@@ -36,11 +36,19 @@ public class RunnersHandler implements HTTPResponseListener{
     private String strWinMarketId = "";
     private String strPlaceMarketId = "";
     private String strMarketId = "";
+    private String strMarketStatus = "";
+
+    public String getStrMarketStatus() {
+        return strMarketStatus;
+    }
+
+    public void setStrMarketStatus(String strMarketStatus) {
+        this.strMarketStatus = strMarketStatus;
+    }
 
     public RunnersHandler(){
         this.apingrequester.setHTTPResponseListener(RunnersHandler.this);
     }
-
 
     public String getStrMarketId() {
         return strMarketId;
@@ -74,11 +82,9 @@ public class RunnersHandler implements HTTPResponseListener{
         return alrnnrRunners;
     }
 
-
     public ArrayList<Runner> getAlrnnrPlaceRunners() {
         return alrnnrPlaceRunners;
     }
-
 
     public void setActivityResponseListener(ActivityResponseListener actrspnslstnr) {
         this.actrspnslstnr = actrspnslstnr;
@@ -118,6 +124,7 @@ public class RunnersHandler implements HTTPResponseListener{
                 for (int i = 0; i < jArray.length(); i++) {
                     joMarket = jArray.getJSONObject(i);
                     String strMarketId = joMarket.getString("marketId");
+                    this.strMarketStatus = joMarket.getString("status");
                     jaRunners = new JSONArray(joMarket.getString("runners"));
                     try {
                         if(strMarketId.compareTo(strWinMarketId) == 0){

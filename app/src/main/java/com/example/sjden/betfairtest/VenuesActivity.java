@@ -68,6 +68,7 @@ public class VenuesActivity extends AppCompatActivity implements ActivityRespons
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_master, menu);
+        menu.findItem(R.id.action_balance).setTitle("AUS: $" + APINGAccountRequester.getDblAusBalance().toString());
         //getActionBar().setDisplayHomeAsUpEnabled(false);
         return true;
     }
@@ -95,6 +96,15 @@ public class VenuesActivity extends AppCompatActivity implements ActivityRespons
             startNewIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(startNewIntent);
             finish();
+        }
+        else if(id == R.id.action_betlist){
+            Intent startNewIntent = new Intent(this, BetlistActivity.class);
+            startActivity(startNewIntent);
+        }
+        else if(id == R.id.action_wallet){
+            Log.d("thingy","working");
+            Intent startNewIntent = new Intent(this, WalletActivity.class);
+            startActivity(startNewIntent);
         }
 
         return super.onOptionsItemSelected(item);

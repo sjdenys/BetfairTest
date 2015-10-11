@@ -2,6 +2,8 @@
     <string name="app_name">BetfairTest</string>
     <string name="action_settings">Settings</string>
     <string name="action_log_out">Log Out</string>
+	<string name="action_wallet">Wallets</string>
+    <string name="action_betlist">Bet History</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="bttnLogInText">Log In</string>
     <string name="txtvwUsername">Username:</string>

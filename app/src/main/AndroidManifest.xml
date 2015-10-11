@@ -11,17 +11,21 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login" >
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".RaceTypeActivity"
-            android:label="@string/title_activity_race_type" >
+            android:label="@string/title_activity_race_type"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".VenuesActivity"
-            android:label="@string/title_activity_venue_list" >
+            android:label="@string/title_activity_venue_list"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".SplashScreenActivity" >
+        <activity android:name=".SplashScreenActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -29,20 +33,35 @@
         </activity>
         <activity
             android:name=".RacesActivity"
-            android:label="@string/title_activity_races" >
+            android:label="@string/title_activity_races"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".RunnersActivity"
-            android:label="@string/title_activity_runners" >
+            android:label="@string/title_activity_runners"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".StakeActivity"
-            android:label="@string/title_activity_stake" >
+            android:label="@string/title_activity_stake"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".BetSuccessActivity"
-            android:label="@string/title_activity_bet_success" >
+            android:label="@string/title_activity_bet_success"
+            android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name=".WalletActivity"
+            android:label="Wallet"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".BetlistActivity"
+            android:label="Bet History"
+            android:screenOrientation="portrait">
+        </activity>
+
     </application>
 
 </manifest>

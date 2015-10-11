@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+
+    <TextView
+    android:id="@+id/txtvwRunnerName"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+        android:textSize="18sp"
+    android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/betfair_black"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/txtvwStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/txtvwRunnerName"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/spcStatusProfit"
+        android:layout_toLeftOf="@+id/spcStatusProfit"
+        android:layout_alignLeft="@+id/txtvwRunnerName" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignTop="@+id/txtvwStatus"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/spcStatusProfit"
+        android:layout_below="@+id/txtvwRunnerName" />
+
+    <TextView
+        android:id="@+id/txtvwProfit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_toRightOf="@+id/spcStatusProfit"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/txtvwRunnerName"
+        android:layout_alignRight="@+id/txtvwRunnerName" />
+
+    <TextView
+        android:id="@+id/txtvwRace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/txtvwStatus"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/txtvwStatus"
+        android:layout_alignEnd="@+id/txtvwStatus"
+        android:layout_alignLeft="@+id/txtvwStatus" />
+
+    <TextView
+        android:id="@+id/txtvwDatePlaced"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/txtvwRace"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/txtvwRace"
+        android:layout_alignEnd="@+id/txtvwRace"
+        android:layout_alignLeft="@+id/txtvwRace" />
+
+</RelativeLayout>

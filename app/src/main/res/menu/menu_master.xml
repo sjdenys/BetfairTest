@@ -1,16 +1,30 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_balance"
+        app:showAsAction="always"
+        android:title="Balance"/>
+    <item
         android:id="@+id/a_More"
         app:showAsAction="always"
-        android:title="...">
+        android:title="Menu">
         <menu>
+            <item
+                android:id="@+id/action_betlist"
+                android:orderInCategory="100"
+                app:showAsAction="always"
+                android:title="Bet History"/>
+            <item
+                android:id="@+id/action_wallet"
+                android:orderInCategory="100"
+                app:showAsAction="always"
+                android:title="Wallet"/>
             <item
                 android:id="@+id/action_log_out"
                 android:orderInCategory="100"
                 app:showAsAction="always"
                 android:title="Log Out"/>
+
         </menu>
     </item>
-
 </menu>

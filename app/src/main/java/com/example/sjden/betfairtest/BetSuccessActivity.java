@@ -40,6 +40,7 @@ public class BetSuccessActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_master, menu);
+        menu.findItem(R.id.action_balance).setTitle("AUS: $" + APINGAccountRequester.getDblAusBalance().toString());
         return true;
     }
 
@@ -67,6 +68,14 @@ public class BetSuccessActivity extends AppCompatActivity {
             startActivity(startNewIntent);
             finish();
         }
+        else if(id == R.id.action_betlist){
+            Intent startNewIntent = new Intent(this, BetlistActivity.class);
+            startActivity(startNewIntent);
+        }
+        else if(id == R.id.action_wallet){
+            Intent startNewIntent = new Intent(this, WalletActivity.class);
+            startActivity(startNewIntent);
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -86,6 +95,17 @@ public class BetSuccessActivity extends AppCompatActivity {
         Intent intntRaceType = new Intent(this, RaceTypeActivity.class);
         intntRaceType.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intntRaceType);
+    }
+
+    public void returnToRacing(View vwButton){
+        Intent intntRaceType = new Intent(this, RaceTypeActivity.class);
+        intntRaceType.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intntRaceType);
+    }
+
+    public void showAllBets(View vwButton){
+        Intent startNewIntent = new Intent(this, BetlistActivity.class);
+        startActivity(startNewIntent);
     }
 
 }

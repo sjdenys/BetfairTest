@@ -65,6 +65,7 @@ public class RunnersActivity extends AppCompatActivity implements ActivityRespon
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_master, menu);
+        menu.findItem(R.id.action_balance).setTitle("AUS: $" + APINGAccountRequester.getDblAusBalance().toString());
         //getActionBar().setDisplayHomeAsUpEnabled(false);
         return true;
     }
@@ -92,6 +93,15 @@ public class RunnersActivity extends AppCompatActivity implements ActivityRespon
             startNewIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(startNewIntent);
             finish();
+        }
+        else if(id == R.id.action_betlist){
+            Intent startNewIntent = new Intent(this, BetlistActivity.class);
+            startActivity(startNewIntent);
+        }
+        else if(id == R.id.action_wallet){
+            Log.d("thingy","working");
+            Intent startNewIntent = new Intent(this, WalletActivity.class);
+            startActivity(startNewIntent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -133,37 +143,49 @@ public class RunnersActivity extends AppCompatActivity implements ActivityRespon
     }
 
     public void getOnClickDoSomething(View button)  {
-        Intent intntVenues = new Intent(this, StakeActivity.class);
-        RunnerCatalog rcSelection = null;
-        Runner rnnrSelection = null;
-        for(RunnerCatalog rc : this.rnnrshndlr.getAlrcRunnerCatalog()){
-            if(rc.getSelectionId().toString().compareTo(button.getTag().toString()) == 0){
-                rcSelection = rc;
+        if(this.rnnrshndlr.getStrMarketStatus().compareToIgnoreCase("open") != 0){
+            AlertDialog.Builder alertDialogBuilder =
+                    new AlertDialog.Builder(this)
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            })
+                            .setTitle("Error")
+                            .setMessage("This market is no longer open.");
+            AlertDialog adError = alertDialogBuilder.show();
+        }
+        else {
+            Intent intntVenues = new Intent(this, StakeActivity.class);
+            RunnerCatalog rcSelection = null;
+            Runner rnnrSelection = null;
+            for (RunnerCatalog rc : this.rnnrshndlr.getAlrcRunnerCatalog()) {
+                if (rc.getSelectionId().toString().compareTo(button.getTag().toString()) == 0) {
+                    rcSelection = rc;
+                }
             }
-        }
-        ArrayList<Runner> alrRunner;
-        if(this.spnnrMarket.getSelectedItem().toString().compareToIgnoreCase("Win") == 0) {
-            alrRunner = this.rnnrshndlr.getAlrnnrRunners();
-        }
-        else{
-            alrRunner = this.rnnrshndlr.getAlrnnrPlaceRunners();
-        }
-        for(Runner r : alrRunner){
-            if(r.getSelectionId().toString().compareTo(button.getTag().toString()) == 0){
-                rnnrSelection = r;
+            ArrayList<Runner> alrRunner;
+            if (this.spnnrMarket.getSelectedItem().toString().compareToIgnoreCase("Win") == 0) {
+                alrRunner = this.rnnrshndlr.getAlrnnrRunners();
+            } else {
+                alrRunner = this.rnnrshndlr.getAlrnnrPlaceRunners();
             }
+            for (Runner r : alrRunner) {
+                if (r.getSelectionId().toString().compareTo(button.getTag().toString()) == 0) {
+                    rnnrSelection = r;
+                }
+            }
+            Log.d("thingy", this.rnnrshndlr.getStrMarketId());
+            intntVenues.putExtra("marketID", this.rnnrshndlr.getStrMarketId());
+            intntVenues.putExtra("selectionRunnerName", rcSelection.getRunnerName());
+            intntVenues.putExtra("selectionRunnerId", rcSelection.getSelectionId().toString());
+            if (rnnrSelection.getSp() != null) {
+                intntVenues.putExtra("selectionSP", rnnrSelection.getSp().getNearPrice().toString());
+            } else {
+                intntVenues.putExtra("selectionSP", "-");
+            }
+            startActivity(intntVenues);
         }
-        Log.d("thingy",this.rnnrshndlr.getStrMarketId());
-        intntVenues.putExtra("marketID",this.rnnrshndlr.getStrMarketId());
-        intntVenues.putExtra("selectionRunnerName", rcSelection.getRunnerName());
-        intntVenues.putExtra("selectionRunnerId", rcSelection.getSelectionId().toString());
-        if(rnnrSelection.getSp() != null) {
-            intntVenues.putExtra("selectionSP", rnnrSelection.getSp().getNearPrice().toString());
-        }
-        else{
-            intntVenues.putExtra("selectionSP", "-");
-        }
-        startActivity(intntVenues);
     }
 
     private void parseMarkets(){
@@ -201,6 +223,19 @@ public class RunnersActivity extends AppCompatActivity implements ActivityRespon
             }
             this.spnnrMarket.setVisibility(View.VISIBLE);
             this.prgrssbrLoading.setVisibility(View.INVISIBLE);
+            if(this.rnnrshndlr.getStrMarketStatus().compareToIgnoreCase("open") != 0){
+                this.spnnrMarket.setEnabled(false);
+                AlertDialog.Builder alertDialogBuilder =
+                        new AlertDialog.Builder(this)
+                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                })
+                        .setTitle("Error")
+                        .setMessage("This market is no longer open.");
+                AlertDialog adError = alertDialogBuilder.show();
+            }
             this.adapter = new RunnersArrayAdapter(this, this.rnnrshndlr.getAlrcRunnerCatalog(), this.rnnrshndlr.getAlrnnrRunners());
             this.lstvwRunners.setAdapter(adapter);
         }
@@ -234,6 +269,8 @@ public class RunnersActivity extends AppCompatActivity implements ActivityRespon
             rowView.setTag(Long.toString(alrnnrRunnersCatalog.get(position).getSelectionId()));
             TextView textView = (TextView) rowView.findViewById(R.id.txtvwRunnerName);
             Button imageView = (Button) rowView.findViewById(R.id.bttnSP);
+            imageView.setOnClickListener(myClickListener);
+            imageView.setTag(Long.toString(alrnnrRunnersCatalog.get(position).getSelectionId()));
             String s = alrnnrRunnersCatalog.get(position).getRunnerName();
             textView.setText(s);
             for(Runner r : alrnnrRunners){

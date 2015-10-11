@@ -44,6 +44,7 @@ public class StakeActivity extends AppCompatActivity implements ActivityResponse
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_master, menu);
+        menu.findItem(R.id.action_balance).setTitle("AUS: $" + APINGAccountRequester.getDblAusBalance().toString());
         return true;
     }
 
@@ -70,6 +71,15 @@ public class StakeActivity extends AppCompatActivity implements ActivityResponse
             startNewIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(startNewIntent);
             finish();
+        }
+        else if(id == R.id.action_betlist){
+            Intent startNewIntent = new Intent(this, BetlistActivity.class);
+            startActivity(startNewIntent);
+        }
+        else if(id == R.id.action_wallet){
+            Log.d("thingy","working");
+            Intent startNewIntent = new Intent(this, WalletActivity.class);
+            startActivity(startNewIntent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -101,16 +111,33 @@ public class StakeActivity extends AppCompatActivity implements ActivityResponse
         if(strResponseReceived.endsWith("Exception")){
             Log.d("thingy","exception");
         }
-        else if(strResponseReceived.compareTo("error") == 0) {
-            Log.d("thingy","error");
-        }
-        else{
-            Log.d("thingy","success");
+        else if(strResponseReceived.compareToIgnoreCase("success") == 0){
+            Log.d("thingy", "success");
+            APINGAccountRequester.setDblAusBalance(APINGAccountRequester.getDblAusBalance() - Double.parseDouble(this.edttxtBetAmount.getText().toString()));
             Intent intntBetSuccess = new Intent(this, BetSuccessActivity.class);
             intntBetSuccess.putExtra("runnerName",this.stkhndlr.getStrRunnerName());
             intntBetSuccess.putExtra("runnerSP",this.stkhndlr.getDblSP());
             intntBetSuccess.putExtra("liability",this.edttxtBetAmount.getText().toString());
             startActivity(intntBetSuccess);
+        }
+        else{
+            this.pdLoading.hide();
+            AlertDialog.Builder alertDialogBuilder =
+                    new AlertDialog.Builder(this)
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+            if(strResponseReceived.compareToIgnoreCase("INSUFFICIENT_FUNDS") == 0){
+                alertDialogBuilder.setTitle("Insufficient funds");
+                alertDialogBuilder.setMessage("You do not have sufficient funds to place this bet.");
+            }
+            else{
+                alertDialogBuilder.setTitle("Couldn't place bet");
+                alertDialogBuilder.setMessage("Something has gone wrong and we couldn't place your bet. Please try again soon.");
+            }
+            AlertDialog adError = alertDialogBuilder.show();
         }
     }
 }

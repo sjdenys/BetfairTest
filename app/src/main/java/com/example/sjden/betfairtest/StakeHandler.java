@@ -9,6 +9,7 @@ import com.example.sjden.betfairtest.objects.OrderType;
 import com.example.sjden.betfairtest.objects.PlaceInstruction;
 import com.example.sjden.betfairtest.objects.Side;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -108,7 +109,13 @@ public class StakeHandler implements HTTPResponseListener {
                     actrspnslstnr.responseReceived("error");
                 }
                 else{
-                    actrspnslstnr.responseReceived("success");
+                    JSONObject joResults = new JSONObject(jObject.getString("result"));
+                    if(joResults.getString("status").compareToIgnoreCase("failure") == 0){
+                        actrspnslstnr.responseReceived(joResults.getString("errorCode"));
+                    }
+                    else {
+                        actrspnslstnr.responseReceived("success");
+                    }
                 }
             }
             catch (JSONException e)
