@@ -66,7 +66,6 @@ public class RunnersActivity extends AppCompatActivity implements ActivityRespon
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_master, menu);
         menu.findItem(R.id.action_balance).setTitle("AUS: $" + APINGAccountRequester.getDblAusBalance().toString());
-        //getActionBar().setDisplayHomeAsUpEnabled(false);
         return true;
     }
 

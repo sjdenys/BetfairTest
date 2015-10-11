@@ -94,6 +94,7 @@ public class RacesActivity extends AppCompatActivity implements ActivityResponse
 
         return super.onOptionsItemSelected(item);
     }
+
     public void initialiseUIElements() {
         this.rl = (RelativeLayout) findViewById(R.id.rlRaces);
         this.txtvwRacesVenueName = (TextView) findViewById(R.id.txtvwRacesVenueName);

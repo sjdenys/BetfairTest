@@ -17,6 +17,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import java.text.DecimalFormat;
+
 public class RaceTypeActivity extends AppCompatActivity implements ActivityResponseListener {
 
     private final RaceTypeHandler rctyphndlr = new RaceTypeHandler();
@@ -48,7 +50,6 @@ public class RaceTypeActivity extends AppCompatActivity implements ActivityRespo
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_master, menu);
         menu.findItem(R.id.action_balance).setTitle("AUS: $" + APINGAccountRequester.getDblAusBalance().toString());
-        //getActionBar().setDisplayHomeAsUpEnabled(false);
         return true;
     }
 

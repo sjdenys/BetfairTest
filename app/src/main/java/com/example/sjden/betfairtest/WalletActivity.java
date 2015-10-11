@@ -63,6 +63,7 @@ public class WalletActivity extends AppCompatActivity implements ActivityRespons
             }
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -106,6 +107,7 @@ public class WalletActivity extends AppCompatActivity implements ActivityRespons
 
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public void responseReceived(String strResponseReceived) {
         if(strResponseReceived.endsWith("Exception")){
