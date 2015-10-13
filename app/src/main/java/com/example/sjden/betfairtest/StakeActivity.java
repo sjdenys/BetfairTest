@@ -91,7 +91,13 @@ public class StakeActivity extends AppCompatActivity implements ActivityResponse
         this.edttxtBetAmount = (EditText)findViewById(R.id.edttxtBetAmount);
         this.txtvwRunner.setText(this.stkhndlr.getStrRunnerName());
         DecimalFormat dfFormattedSP = new DecimalFormat("#.##");
-        this.bttnSP.setText(dfFormattedSP.format(this.stkhndlr.getDblSP()));
+        if(this.stkhndlr.getDblSP() != 0.0){
+            this.bttnSP.setText(dfFormattedSP.format(this.stkhndlr.getDblSP()));
+        }
+        else{
+            this.bttnSP.setText("-");
+        }
+
         this.pdLoading = new ProgressDialog(StakeActivity.this);
         this.pdLoading.setMessage("Placing bet...");
         this.pdLoading.setCancelable(false);

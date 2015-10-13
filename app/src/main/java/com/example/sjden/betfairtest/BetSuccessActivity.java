@@ -86,7 +86,12 @@ public class BetSuccessActivity extends AppCompatActivity {
         this.txtvwConfirmText = (TextView)findViewById(R.id.txtvwConfirmText);
         this.txtvwRunner.setText(this.bsh.getStrRunnerName());
         DecimalFormat dfFormattedNumbers = new DecimalFormat("#.##");
-        this.bttnSP.setText(dfFormattedNumbers.format(this.bsh.getDblSP()));
+        if(this.bsh.getDblSP() != 0.0){
+            this.bttnSP.setText(dfFormattedNumbers.format(this.bsh.getDblSP()));
+        }
+        else{
+            this.bttnSP.setText("-");
+        }
         this.txtvwConfirmText.setText("$" + dfFormattedNumbers.format(this.bsh.getDblLiability()) + " on " + this.bsh.getStrRunnerName());
     }
 

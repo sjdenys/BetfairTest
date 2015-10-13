@@ -34,7 +34,7 @@ public class WalletHandler implements HTTPResponseListener {
     }
 
     public void requestUKAccountFunds() {
-        strRequestType = "getAccountFunds";
+        strRequestType = "getAccountFundsUK";
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("wallet", "UK");
         JSONRPCRequest jrr = new JSONRPCRequest();
@@ -45,7 +45,7 @@ public class WalletHandler implements HTTPResponseListener {
     }
 
     public void requestAUSAccountFunds() {
-        strRequestType = "getAccountFunds";
+        strRequestType = "getAccountFundsAus";
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("wallet", "AUSTRALIAN");
         JSONRPCRequest jrr = new JSONRPCRequest();
@@ -85,7 +85,17 @@ public class WalletHandler implements HTTPResponseListener {
             actrspnslstnr.responseReceived(strResponseReceived);
         } else {
             switch (strRequestType) {
-                case "getAccountFunds":
+                case "transferFunds":
+                    try {
+                        //update wallet values
+                        requestUKAccountFunds();
+                        requestAUSAccountFunds();
+                        //and probably show a confirmation
+                    } catch (Exception ex) {
+                        Log.d("thingy", ex.toString());
+                    }
+                    break;
+                default:
                     try {
                         //Update wallet balances
                         JSONObject jObject = new JSONObject(strResponseReceived);
@@ -95,7 +105,7 @@ public class WalletHandler implements HTTPResponseListener {
                         if (jResult.getString("wallet").equals("UK")) {
                             //update uk balance
                             ukBalance = jResult.getDouble("availableToBetBalance");
-                            ukBalString = "£" + jResult.getString("availableToBetBalance");
+                            ukBalString = "$" + jResult.getString("availableToBetBalance");
                             Log.d("ukBalString", ukBalString);
                         } else if (jResult.getString("wallet").equals("AUSTRALIAN")) {
                             //update aus balance
@@ -103,17 +113,7 @@ public class WalletHandler implements HTTPResponseListener {
                             ausBalString = "$" + jResult.getString("availableToBetBalance");
                             Log.d("ausBalString", ausBalString);
                         }
-                        actrspnslstnr.responseReceived("");
-                    } catch (Exception ex) {
-                        Log.d("thingy", ex.toString());
-                    }
-                    break;
-                case "transferFunds":
-                    try {
-                        //update wallet values
-                        requestAUSAccountFunds();
-                        requestUKAccountFunds();
-                        //and probably show a confirmation
+                        actrspnslstnr.responseReceived(strRequestType);
                     } catch (Exception ex) {
                         Log.d("thingy", ex.toString());
                     }

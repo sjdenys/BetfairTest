@@ -178,10 +178,12 @@ public class RunnersActivity extends AppCompatActivity implements ActivityRespon
             intntVenues.putExtra("marketID", this.rnnrshndlr.getStrMarketId());
             intntVenues.putExtra("selectionRunnerName", rcSelection.getRunnerName());
             intntVenues.putExtra("selectionRunnerId", rcSelection.getSelectionId().toString());
-            if (rnnrSelection.getSp() != null) {
+            if (rnnrSelection.getSp() != null && rnnrSelection.getSp().getNearPrice() != null) {
+                Log.d("thingy","1");
                 intntVenues.putExtra("selectionSP", rnnrSelection.getSp().getNearPrice().toString());
             } else {
-                intntVenues.putExtra("selectionSP", "-");
+                Log.d("thingy","2");
+                intntVenues.putExtra("selectionSP", "0.0");
             }
             startActivity(intntVenues);
         }

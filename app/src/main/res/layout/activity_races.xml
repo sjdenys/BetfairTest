@@ -8,22 +8,39 @@
     android:id="@+id/rlRaces"
     android:background="@color/betfair_yellow">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Name of Venue"
-        android:id="@+id/txtvwRacesVenueName"
+    <ScrollView
+        android:id="@+id/scrllvwRaces"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
-    <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/prgrssbrLoading"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        <RelativeLayout
+            android:id="@+id/rltvlytContent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/betfair_yellow" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name of Venue"
+                android:id="@+id/txtvwRacesVenueName"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:visibility="invisible" />
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/prgrssbrLoading"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+    </ScrollView>
 
 
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package com.example.sjden.betfairtest;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,14 +29,14 @@ public class WalletActivity extends AppCompatActivity implements ActivityRespons
     private EditText transferAmount;
     private Switch directionSwitch;
     private ProgressBar prgrssbrLoading;
+    private ProgressDialog pdLoading;
+    private Menu mnActionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallet);
         walletHandler.setActivityResponseListener(WalletActivity.this);
-        walletHandler.requestUKAccountFunds();
-        walletHandler.requestAUSAccountFunds();
         this.rl = (RelativeLayout)findViewById(R.id.rlContent);
         this.ukBalanceText = (TextView)findViewById(R.id.ukBalanceText);
         this.ausBalanceText = (TextView)findViewById(R.id.ausBalanceText);
@@ -46,10 +47,14 @@ public class WalletActivity extends AppCompatActivity implements ActivityRespons
         this.transferAmount = (EditText)findViewById(R.id.amountText);
         this.directionSwitch = (Switch)findViewById(R.id.directionSwitch);
         this.prgrssbrLoading = (ProgressBar)findViewById(R.id.prgrssbrLoading);
+        initialiseUIElements();
+        walletHandler.requestUKAccountFunds();
+        walletHandler.requestAUSAccountFunds();
     }
 
     public void doTransfer(View view) {
         Log.d("Button Pressed", "Do transfer");
+        this.pdLoading.show();
         //ukBalanceText.setText(walletHandler.ukBalString);
         //ausBalanceText.setText(walletHandler.ausBalString);
         if(transferAmount.getText().toString() != null && transferAmount.getText().toString().isEmpty() == false) {
@@ -69,6 +74,7 @@ public class WalletActivity extends AppCompatActivity implements ActivityRespons
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_master, menu);
         menu.findItem(R.id.action_balance).setTitle("AUS: $" + APINGAccountRequester.getDblAusBalance().toString());
+        this.mnActionBar = menu;
         return true;
     }
 
@@ -100,7 +106,6 @@ public class WalletActivity extends AppCompatActivity implements ActivityRespons
             startActivity(startNewIntent);
         }
         else if(id == R.id.action_wallet){
-            Log.d("thingy","working");
             Intent startNewIntent = new Intent(this, WalletActivity.class);
             startActivity(startNewIntent);
         }
@@ -108,14 +113,21 @@ public class WalletActivity extends AppCompatActivity implements ActivityRespons
         return super.onOptionsItemSelected(item);
     }
 
+    private void initialiseUIElements(){
+        this.pdLoading = new ProgressDialog(this);
+        this.pdLoading.setMessage("Transferring funds...");
+        this.pdLoading.setCancelable(false);
+    }
+
     @Override
     public void responseReceived(String strResponseReceived) {
+        Log.d("thingy", strResponseReceived);
         if(strResponseReceived.endsWith("Exception")){
             Log.d("Exception", strResponseReceived);
         }
-        else {
+        else if(strResponseReceived.compareToIgnoreCase("getAccountFundsAus") == 0) {
             Log.d("WalActResponseReceived", strResponseReceived);
-            prgrssbrLoading.setVisibility(View.INVISIBLE);
+            this.prgrssbrLoading.setVisibility(View.INVISIBLE);
             this.ukBalanceText.setVisibility(View.VISIBLE);
             this.ausBalanceText.setVisibility(View.VISIBLE);
             this.transferButton.setVisibility(View.VISIBLE);
@@ -124,8 +136,13 @@ public class WalletActivity extends AppCompatActivity implements ActivityRespons
             this.txtvwUKBalanceLabel.setVisibility(View.VISIBLE);
             this.txtvwAusBalanceLabel.setVisibility(View.VISIBLE);
             this.txtvwAmountLabel.setVisibility(View.VISIBLE);
-            ukBalanceText.setText(walletHandler.ukBalString);
-            ausBalanceText.setText(walletHandler.ausBalString);
+            this.ukBalanceText.setText(walletHandler.ukBalString);
+            this.ausBalanceText.setText(walletHandler.ausBalString);
+            APINGAccountRequester.setDblAusBalance(walletHandler.ausBalance);
+            invalidateOptionsMenu();
+            //onCreateOptionsMenu(this.mnActionBar);
+            this.pdLoading.hide();
         }
+
     }
 }

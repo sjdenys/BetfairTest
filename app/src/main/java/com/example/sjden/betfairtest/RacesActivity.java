@@ -34,7 +34,7 @@ import java.util.TimeZone;
 public class RacesActivity extends AppCompatActivity implements ActivityResponseListener {
 
     private RacesHandler rcshndlr = new RacesHandler();
-    private RelativeLayout rl;
+    private RelativeLayout rltvlytContent;
     private ProgressBar prgrssbrLoading;
     private TextView txtvwRacesVenueName;
     private ArrayList<Button> raceButtons;
@@ -96,7 +96,7 @@ public class RacesActivity extends AppCompatActivity implements ActivityResponse
     }
 
     public void initialiseUIElements() {
-        this.rl = (RelativeLayout) findViewById(R.id.rlRaces);
+        this.rltvlytContent = (RelativeLayout) findViewById(R.id.rltvlytContent);
         this.txtvwRacesVenueName = (TextView) findViewById(R.id.txtvwRacesVenueName);
         this.prgrssbrLoading = (ProgressBar) findViewById(R.id.prgrssbrLoading);
     }
@@ -120,12 +120,12 @@ public class RacesActivity extends AppCompatActivity implements ActivityResponse
             this.raceButtons.add(newButton);
         }
         if(this.raceButtons.size() > 0) {
-            rl.addView(this.raceButtons.get(0));
+            rltvlytContent.addView(this.raceButtons.get(0));
             RelativeLayout.LayoutParams lpTopButton = (RelativeLayout.LayoutParams) this.raceButtons.get(0).getLayoutParams();
             lpTopButton.addRule(RelativeLayout.ALIGN_PARENT_TOP, this.raceButtons.get(0).getId());
             lpTopButton.addRule(RelativeLayout.CENTER_HORIZONTAL, this.raceButtons.get(0).getId());
             for(int i =1; i < this.raceButtons.size(); i++) {
-                rl.addView(this.raceButtons.get(i));
+                rltvlytContent.addView(this.raceButtons.get(i));
                 RelativeLayout.LayoutParams lpBelowTopButton = (RelativeLayout.LayoutParams) this.raceButtons.get(i).getLayoutParams();
                 lpBelowTopButton.addRule(RelativeLayout.BELOW, this.raceButtons.get(i - 1).getId());
                 lpBelowTopButton.addRule(RelativeLayout.ALIGN_LEFT, this.raceButtons.get(i - 1).getId());
