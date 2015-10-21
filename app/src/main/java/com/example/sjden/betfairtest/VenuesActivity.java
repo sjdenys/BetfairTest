@@ -1,13 +1,16 @@
 package com.example.sjden.betfairtest;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -193,7 +196,7 @@ public class VenuesActivity extends AppCompatActivity implements ActivityRespons
 
         for(int i = 0 ; i < alEvents.size() ; i++){
             if(alEvents.get(i).getVenue() != null) {
-                bttnForArray = new Button(this);
+                bttnForArray = new Button(new ContextThemeWrapper(this, R.style.Widget_AppCompat_Button), null, 0);
                 bttnForArray.setId(Integer.parseInt(alEvents.get(i).getId()));
                 bttnForArray.setTag("bttn" + alEvents.get(i).getVenue());
                 bttnForArray.setText(alEvents.get(i).getVenue());
@@ -236,7 +239,6 @@ public class VenuesActivity extends AppCompatActivity implements ActivityRespons
 
         this.spnnrRaceDates.setVisibility(View.VISIBLE);
         this.prgrssbrLoadingHorses.setVisibility(View.INVISIBLE);
-        scaleText();
     }
 
     public void getOnClickDoSomething(View button)  {
@@ -246,11 +248,20 @@ public class VenuesActivity extends AppCompatActivity implements ActivityRespons
     }
 
     @Override
-    public void responseReceived(String strResponseReceived) {
-        if(strResponseReceived.endsWith("Exception")){
-            Log.d("thingy","error");
+    public void responseReceived(Object objResponseReceived) {
+        if(objResponseReceived.getClass() == Exception.class){
+            AlertDialog.Builder alertDialogBuilder =
+                    new AlertDialog.Builder(this)
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+            alertDialogBuilder.setTitle("Couldn't show bet history");
+            alertDialogBuilder.setMessage("Something has gone wrong and we couldn't show your bet history. Please try again soon.");
+            AlertDialog adError = alertDialogBuilder.show();
         }
-        else {
+        else if(objResponseReceived.getClass() == String.class){
             createVenueButtons();
         }
     }

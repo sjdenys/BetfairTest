@@ -1,7 +1,9 @@
 package com.example.sjden.betfairtest;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -71,20 +73,34 @@ public class SplashScreenActivity extends Activity implements ActivityResponseLi
         }, SPLASH_TIME_OUT);
     }
 
-    public void responseReceived(String strResponseReceived) {
-        if(strResponseReceived.compareTo("SUCCESS") == 0){
-            SharedPreferences spSettings = this.getSharedPreferences("LoginDataFile", Context.MODE_PRIVATE);
-            SharedPreferences.Editor speEditor = spSettings.edit();
-            speEditor.putLong("balance", Double.doubleToRawLongBits(APINGAccountRequester.getDblAusBalance()));
-            speEditor.apply();
-            Intent intnt = new Intent(this, RaceTypeActivity.class);
-            startActivity(intnt);
-            finish();
+    public void responseReceived(Object objResponseReceived) {
+        if(objResponseReceived.getClass() == Exception.class){
+            AlertDialog.Builder alertDialogBuilder =
+                    new AlertDialog.Builder(this)
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+            alertDialogBuilder.setTitle("Couldn't show bet history");
+            alertDialogBuilder.setMessage("Something has gone wrong and we couldn't show your bet history. Please try again soon.");
+            AlertDialog adError = alertDialogBuilder.show();
         }
-        else{
-            Intent intnt = new Intent(this, LoginActivity.class);
-            startActivity(intnt);
-            finish();
+        else if(objResponseReceived.getClass() == String.class) {
+            String strResponseReceived = (String)objResponseReceived;
+            if (strResponseReceived.compareTo("SUCCESS") == 0) {
+                SharedPreferences spSettings = this.getSharedPreferences("LoginDataFile", Context.MODE_PRIVATE);
+                SharedPreferences.Editor speEditor = spSettings.edit();
+                speEditor.putLong("balance", Double.doubleToRawLongBits(APINGAccountRequester.getDblAusBalance()));
+                speEditor.apply();
+                Intent intnt = new Intent(this, RaceTypeActivity.class);
+                startActivity(intnt);
+                finish();
+            } else {
+                Intent intnt = new Intent(this, LoginActivity.class);
+                startActivity(intnt);
+                finish();
+            }
         }
     }
 

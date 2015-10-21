@@ -79,11 +79,12 @@ public class WalletHandler implements HTTPResponseListener {
     }
 
     @Override
-    public void ResponseReceived(String strRequestType, String strResponseReceived) {
-        Log.d("ResponseReceived", "Request: " + strRequestType + ". Response: " + strResponseReceived);
-        if (strResponseReceived.endsWith("Exception")) {
-            actrspnslstnr.responseReceived(strResponseReceived);
-        } else {
+    public void ResponseReceived(String strRequestType, Object objResponseReceived) {
+        if(objResponseReceived.getClass() == Exception.class){
+            actrspnslstnr.responseReceived(objResponseReceived);
+        }
+        else if(objResponseReceived.getClass() == String.class){
+            String strResponseReceived = (String)objResponseReceived;
             switch (strRequestType) {
                 case "transferFunds":
                     try {

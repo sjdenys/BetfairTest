@@ -97,11 +97,12 @@ public class StakeHandler implements HTTPResponseListener {
         return piOrderInstructions;
     }
 
-    public void ResponseReceived(String strRequestType, String strResponseReceived) {
-        if(strResponseReceived.endsWith("Exception")){
-            actrspnslstnr.responseReceived(strResponseReceived);
+    public void ResponseReceived(String strRequestType, Object objResponseReceived) {
+        if(objResponseReceived.getClass() == Exception.class){
+            actrspnslstnr.responseReceived(objResponseReceived);
         }
-        else {
+        else if(objResponseReceived.getClass() == String.class){
+            String strResponseReceived = (String)objResponseReceived;
             try
             {
                 JSONObject jObject = new JSONObject(strResponseReceived);

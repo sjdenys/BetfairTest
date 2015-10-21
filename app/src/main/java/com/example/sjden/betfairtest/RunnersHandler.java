@@ -110,11 +110,12 @@ public class RunnersHandler implements HTTPResponseListener{
     }
 
     @Override
-    public void ResponseReceived(String strRequestType, String strResponseReceived) {
-        if(strResponseReceived.endsWith("Exception")){
-            this.actrspnslstnr.responseReceived(strResponseReceived);
+    public void ResponseReceived(String strRequestType, Object objResponseReceived) {
+        if(objResponseReceived.getClass() == Exception.class){
+            actrspnslstnr.responseReceived(objResponseReceived);
         }
-        else {
+        else if(objResponseReceived.getClass() == String.class){
+            String strResponseReceived = (String)objResponseReceived;
             try {
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
                 JSONObject jObject = new JSONObject(strResponseReceived);

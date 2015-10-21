@@ -57,16 +57,15 @@ public class LoginHandler implements HTTPResponseListener {
     }
 
     @Override
-    public void ResponseReceived(String strRequestType, String strResponseReceived) {
-        String strSessionToken = "";
-        String strStatus = "";
-        String strLoginResponse = strResponseReceived.replace("{", "").replace("}", "");
-        String[] strResponseFields = strLoginResponse.split(",");
-        if(strResponseReceived.endsWith("Exception")){
-            actrspnslstnr.responseReceived(strResponseReceived);
+    public void ResponseReceived(String strRequestType, Object objResponseReceived) {
+        if(objResponseReceived.getClass() == Exception.class){
+            actrspnslstnr.responseReceived(objResponseReceived);
         }
-        else {
+        else if(objResponseReceived.getClass() == String.class){
             if(this.strRequestType.compareTo("login") == 0) {
+                String strLoginResponse = (String)objResponseReceived;
+                strLoginResponse = strLoginResponse.replace("{", "").replace("}", "");
+                String[] strResponseFields = strLoginResponse.split(",");
                 for (String s : strResponseFields) {
                     hmJSON.put(s.split(":")[0].replace("\"", ""), s.split(":")[1].replace("\"", ""));
                 }
@@ -82,7 +81,7 @@ public class LoginHandler implements HTTPResponseListener {
             }
             else{
                 try {
-                    JSONObject jObject = new JSONObject(strResponseReceived);
+                    JSONObject jObject = new JSONObject((String)objResponseReceived);
                     JSONObject jResult = new JSONObject(jObject.getString("result"));
                     APINGAccountRequester.setDblAusBalance(jResult.getDouble("availableToBetBalance"));
                     actrspnslstnr.responseReceived(hmJSON.get("status"));

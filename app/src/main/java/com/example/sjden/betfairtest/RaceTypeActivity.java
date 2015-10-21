@@ -177,11 +177,11 @@ public class RaceTypeActivity extends AppCompatActivity implements ActivityRespo
     }
 
     @Override
-    public void responseReceived(String strResponseReceived) {
-        if(strResponseReceived.endsWith("Exception")){
-            Log.d("thingy",strResponseReceived);
+    public void responseReceived(Object objResponseReceived) {
+        if(objResponseReceived.getClass() == Exception.class){
+            Log.d("thingy",(String)objResponseReceived);
         }
-        else {
+        else if(objResponseReceived.getClass() == String.class){
             responseValueCheck();
         }
     }

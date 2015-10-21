@@ -164,14 +164,15 @@ public class BetlistHandler implements HTTPResponseListener {
     }
 
     @Override
-    public void ResponseReceived(String strRequestType, String strResponseReceived) {
-        if (strResponseReceived.endsWith("Exception")) {
-            actrspnslstnr.responseReceived(strResponseReceived);
-        } else {
+    public void ResponseReceived(String strRequestType, Object objResponseReceived) {
+        if(objResponseReceived.getClass() == Exception.class){
+            actrspnslstnr.responseReceived(objResponseReceived);
+        }
+        else if(objResponseReceived.getClass() == String.class){
             try {
                 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
                 if(strRequestType.equals("listClearedOrders")) {
-                    JSONObject jObject = new JSONObject(strResponseReceived);
+                    JSONObject jObject = new JSONObject((String)objResponseReceived);
                     jObject = new JSONObject((jObject.getString("result")));
                     JSONArray jArray = new JSONArray(jObject.getString("clearedOrders"));
                     for (int i = 0; i < jArray.length(); i++) {
@@ -184,7 +185,7 @@ public class BetlistHandler implements HTTPResponseListener {
                     populateBetList();
                     actrspnslstnr.responseReceived("");
                 } else if(strRequestType.equals("listCurrentOrders")) {
-                    JSONObject jObject = new JSONObject(strResponseReceived);
+                    JSONObject jObject = new JSONObject((String)objResponseReceived);
                     jObject = new JSONObject((jObject.getString("result")));
                     JSONArray jArray = new JSONArray(jObject.getString("currentOrders"));
                     for (int i = 0; i < jArray.length(); i++) {
@@ -202,7 +203,7 @@ public class BetlistHandler implements HTTPResponseListener {
                     }
                 }
                 else if(strRequestType.equals("listMarketCatalog")){
-                    JSONObject jObject = new JSONObject(strResponseReceived);
+                    JSONObject jObject = new JSONObject((String)objResponseReceived);
                     JSONArray jArray = new JSONArray((jObject.getString("result")));
                     for (int i = 0; i < jArray.length(); i++) {
                         try {

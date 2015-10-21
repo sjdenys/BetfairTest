@@ -106,14 +106,14 @@ public class APINGRequester {
      * @version 1.0, 06/09/2015, SD
      * @author Sean Denys
      */
-    private class AsyncRequester extends AsyncTask<Object, Void, ArrayList<String>> {
+    private class AsyncRequester extends AsyncTask<Object, Void, ArrayList<Object>> {
         /**
          * Asynchronously executes the API request
          * Precondition: valid params provided
          * @param objParams: parameters used during the async API request
          */
         @Override
-        protected ArrayList<String> doInBackground(Object... objParams){
+        protected ArrayList<Object> doInBackground(Object... objParams){
             return performPostCall((String)objParams[0], (JSONRPCRequest)objParams[1]);
         }
 
@@ -122,8 +122,9 @@ public class APINGRequester {
          * Precondition: valid URL and request params provided
          * @param jrrAPIRequest: parameters used during the async API request
          */
-        public ArrayList<String> performPostCall(String strRequestType, JSONRPCRequest jrrAPIRequest) {
+        public ArrayList<Object> performPostCall(String strRequestType, JSONRPCRequest jrrAPIRequest) {
             URL url;
+            Object objResponse = null;
             String strResponse = "";
             try {
                 url = new URL(Constants.URL);
@@ -141,7 +142,6 @@ public class APINGRequester {
                 OutputStream otptstrm = httpurlcnnctn.getOutputStream();
                 BufferedWriter bffrdwrtr = new BufferedWriter(new OutputStreamWriter(otptstrm));
                 bffrdwrtr.write(strRequestString);
-
                 bffrdwrtr.flush();
                 bffrdwrtr.close();
                 otptstrm.close();
@@ -157,14 +157,15 @@ public class APINGRequester {
                 else {
                     throw new HttpException(intResponseCode + "");
                 }
+                objResponse = strResponse;
             } catch (Exception e) {
                 Log.d("thingy",e.getMessage());
-                strResponse = e.getClass().getSimpleName();
+                objResponse = e;
             }
             finally {
-                ArrayList<String> alResponse = new ArrayList<String>();
+                ArrayList<Object> alResponse = new ArrayList<Object>();
                 alResponse.add(strRequestType);
-                alResponse.add(strResponse);
+                alResponse.add(objResponse);
                 return alResponse;
             }
         }
@@ -172,11 +173,11 @@ public class APINGRequester {
         /**
          * After async call is completed, triggers listener with response
          * Precondition: valid API response received
-         * @param strResponse: API response
+         * @param objResponse: API response
          */
-        protected void onPostExecute(ArrayList<String> strResponse){
-            Log.d("thingy",strResponse.get(1));
-            listener.ResponseReceived(strResponse.get(0), strResponse.get(1));
+        protected void onPostExecute(ArrayList<Object> objResponse){
+            Log.d("thingy",(String)objResponse.get(1));
+            listener.ResponseReceived((String)objResponse.get(0), objResponse.get(1));
         }
     }
 

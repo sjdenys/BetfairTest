@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -106,11 +107,15 @@ public class RacesActivity extends AppCompatActivity implements ActivityResponse
         Button newButton;
         for(int i = 0; i < rcshndlr.getAlRaces().size(); i++) {
             //lets get down to bizness
-            newButton = new Button(this);
+            newButton = new Button(new ContextThemeWrapper(this, R.style.Widget_AppCompat_Button), null, 0);
             newButton.setId(1000 + i);
             newButton.setTag(this.rcshndlr.getAlRaces().get(i).getMarketId().toString());
-
-            newButton.setText(this.rcshndlr.getAlRaces().get(i).getMarketName() + " - " + this.rcshndlr.getAlRaces().get(i).getMarketStartTime());
+            String strParsedName = "Race " + this.rcshndlr.getAlRaces().get(i).getMarketName().substring(1,3);
+            DateTime dtMarketStartTime = new DateTime(this.rcshndlr.getAlRaces().get(i).getMarketStartTime());
+            DateTimeZone zone = DateTimeZone.forID("Australia/Melbourne");
+            dtMarketStartTime = dtMarketStartTime.plus(zone.getOffset(DateTime.now()));
+            DateTimeFormatter dtfOut = DateTimeFormat.forPattern("HH:mm");
+            newButton.setText(strParsedName + " - " + dtfOut.print(dtMarketStartTime));
             newButton.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -124,11 +129,14 @@ public class RacesActivity extends AppCompatActivity implements ActivityResponse
             RelativeLayout.LayoutParams lpTopButton = (RelativeLayout.LayoutParams) this.raceButtons.get(0).getLayoutParams();
             lpTopButton.addRule(RelativeLayout.ALIGN_PARENT_TOP, this.raceButtons.get(0).getId());
             lpTopButton.addRule(RelativeLayout.CENTER_HORIZONTAL, this.raceButtons.get(0).getId());
+            lpTopButton.addRule(RelativeLayout.ALIGN_PARENT_LEFT, this.raceButtons.get(0).getId());
+            lpTopButton.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, this.raceButtons.get(0).getId());
             for(int i =1; i < this.raceButtons.size(); i++) {
                 rltvlytContent.addView(this.raceButtons.get(i));
                 RelativeLayout.LayoutParams lpBelowTopButton = (RelativeLayout.LayoutParams) this.raceButtons.get(i).getLayoutParams();
                 lpBelowTopButton.addRule(RelativeLayout.BELOW, this.raceButtons.get(i - 1).getId());
-                lpBelowTopButton.addRule(RelativeLayout.ALIGN_LEFT, this.raceButtons.get(i - 1).getId());
+                lpBelowTopButton.addRule(RelativeLayout.ALIGN_PARENT_LEFT, this.raceButtons.get(i).getId());
+                lpBelowTopButton.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, this.raceButtons.get(i).getId());
                 this.raceButtons.get(i).setLayoutParams(lpBelowTopButton);
             }
         }
@@ -163,11 +171,11 @@ public class RacesActivity extends AppCompatActivity implements ActivityResponse
     }
 
     @Override
-    public void responseReceived(String strResponseReceived) {
-        if(strResponseReceived.endsWith("Exception")){
+    public void responseReceived(Object objResponseReceived) {
+        if(objResponseReceived.getClass() == Exception.class){
             Log.d("thingy", "error");
         }
-        else {
+        else if(objResponseReceived.getClass() == String.class){
             prgrssbrLoading.setVisibility(View.INVISIBLE);
             createRaceButtons();
         }

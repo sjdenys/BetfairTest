@@ -113,21 +113,8 @@ public class StakeActivity extends AppCompatActivity implements ActivityResponse
         this.stkhndlr.sendRequestPlaceOrder(new Double(this.edttxtBetAmount.getText().toString()));
     }
 
-    public void responseReceived(String strResponseReceived){
-        if(strResponseReceived.endsWith("Exception")){
-            Log.d("thingy","exception");
-        }
-        else if(strResponseReceived.compareToIgnoreCase("success") == 0){
-            Log.d("thingy", "success");
-            APINGAccountRequester.setDblAusBalance(APINGAccountRequester.getDblAusBalance() - Double.parseDouble(this.edttxtBetAmount.getText().toString()));
-            Intent intntBetSuccess = new Intent(this, BetSuccessActivity.class);
-            intntBetSuccess.putExtra("runnerName",this.stkhndlr.getStrRunnerName());
-            intntBetSuccess.putExtra("runnerSP",this.stkhndlr.getDblSP());
-            intntBetSuccess.putExtra("liability",this.edttxtBetAmount.getText().toString());
-            startActivity(intntBetSuccess);
-        }
-        else{
-            this.pdLoading.hide();
+    public void responseReceived(Object objResponseReceived){
+        if(objResponseReceived.getClass() == Exception.class){
             AlertDialog.Builder alertDialogBuilder =
                     new AlertDialog.Builder(this)
                             .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -135,15 +122,39 @@ public class StakeActivity extends AppCompatActivity implements ActivityResponse
                                     dialog.cancel();
                                 }
                             });
-            if(strResponseReceived.compareToIgnoreCase("INSUFFICIENT_FUNDS") == 0){
-                alertDialogBuilder.setTitle("Insufficient funds");
-                alertDialogBuilder.setMessage("You do not have sufficient funds to place this bet.");
-            }
-            else{
-                alertDialogBuilder.setTitle("Couldn't place bet");
-                alertDialogBuilder.setMessage("Something has gone wrong and we couldn't place your bet. Please try again soon.");
-            }
+            alertDialogBuilder.setTitle("Couldn't show bet history");
+            alertDialogBuilder.setMessage("Something has gone wrong and we couldn't show your bet history. Please try again soon.");
             AlertDialog adError = alertDialogBuilder.show();
+        }
+        else if(objResponseReceived.getClass() == String.class) {
+            String strResponseReceived = (String)objResponseReceived;
+            if(strResponseReceived.compareToIgnoreCase("success") == 0) {
+                Log.d("thingy", "success");
+                APINGAccountRequester.setDblAusBalance(APINGAccountRequester.getDblAusBalance() - Double.parseDouble(this.edttxtBetAmount.getText().toString()));
+                Intent intntBetSuccess = new Intent(this, BetSuccessActivity.class);
+                intntBetSuccess.putExtra("runnerName", this.stkhndlr.getStrRunnerName());
+                intntBetSuccess.putExtra("runnerSP", this.stkhndlr.getDblSP());
+                intntBetSuccess.putExtra("liability", this.edttxtBetAmount.getText().toString());
+                startActivity(intntBetSuccess);
+            }
+            else {
+                this.pdLoading.hide();
+                AlertDialog.Builder alertDialogBuilder =
+                        new AlertDialog.Builder(this)
+                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+                if (strResponseReceived.compareToIgnoreCase("INSUFFICIENT_FUNDS") == 0) {
+                    alertDialogBuilder.setTitle("Insufficient funds");
+                    alertDialogBuilder.setMessage("You do not have sufficient funds to place this bet.");
+                } else {
+                    alertDialogBuilder.setTitle("Couldn't place bet");
+                    alertDialogBuilder.setMessage("Something has gone wrong and we couldn't place your bet. Please try again soon.");
+                }
+                AlertDialog adError = alertDialogBuilder.show();
+            }
         }
     }
 }

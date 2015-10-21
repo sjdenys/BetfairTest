@@ -9,5 +9,6 @@
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="ColoredButton" parent="Widget.AppCompat.Button"> <item name="colorButtonNormal">@color/betfair_button</item> </style>
 
 </resources>

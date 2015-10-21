@@ -1,7 +1,9 @@
 package com.example.sjden.betfairtest;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -120,28 +122,39 @@ public class WalletActivity extends AppCompatActivity implements ActivityRespons
     }
 
     @Override
-    public void responseReceived(String strResponseReceived) {
-        Log.d("thingy", strResponseReceived);
-        if(strResponseReceived.endsWith("Exception")){
-            Log.d("Exception", strResponseReceived);
+    public void responseReceived(Object objResponseReceived) {
+        if(objResponseReceived.getClass() == Exception.class){
+            AlertDialog.Builder alertDialogBuilder =
+                    new AlertDialog.Builder(this)
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+            alertDialogBuilder.setTitle("Couldn't show bet history");
+            alertDialogBuilder.setMessage("Something has gone wrong and we couldn't show your bet history. Please try again soon.");
+            AlertDialog adError = alertDialogBuilder.show();
         }
-        else if(strResponseReceived.compareToIgnoreCase("getAccountFundsAus") == 0) {
-            Log.d("WalActResponseReceived", strResponseReceived);
-            this.prgrssbrLoading.setVisibility(View.INVISIBLE);
-            this.ukBalanceText.setVisibility(View.VISIBLE);
-            this.ausBalanceText.setVisibility(View.VISIBLE);
-            this.transferButton.setVisibility(View.VISIBLE);
-            this.transferAmount.setVisibility(View.VISIBLE);
-            this.directionSwitch.setVisibility(View.VISIBLE);
-            this.txtvwUKBalanceLabel.setVisibility(View.VISIBLE);
-            this.txtvwAusBalanceLabel.setVisibility(View.VISIBLE);
-            this.txtvwAmountLabel.setVisibility(View.VISIBLE);
-            this.ukBalanceText.setText(walletHandler.ukBalString);
-            this.ausBalanceText.setText(walletHandler.ausBalString);
-            APINGAccountRequester.setDblAusBalance(walletHandler.ausBalance);
-            invalidateOptionsMenu();
-            //onCreateOptionsMenu(this.mnActionBar);
-            this.pdLoading.hide();
+        else if(objResponseReceived.getClass() == String.class) {
+            String strResponseReceived = (String)objResponseReceived;
+            if (strResponseReceived.compareToIgnoreCase("getAccountFundsAus") == 0) {
+                Log.d("WalActResponseReceived", strResponseReceived);
+                this.prgrssbrLoading.setVisibility(View.INVISIBLE);
+                this.ukBalanceText.setVisibility(View.VISIBLE);
+                this.ausBalanceText.setVisibility(View.VISIBLE);
+                this.transferButton.setVisibility(View.VISIBLE);
+                this.transferAmount.setVisibility(View.VISIBLE);
+                this.directionSwitch.setVisibility(View.VISIBLE);
+                this.txtvwUKBalanceLabel.setVisibility(View.VISIBLE);
+                this.txtvwAusBalanceLabel.setVisibility(View.VISIBLE);
+                this.txtvwAmountLabel.setVisibility(View.VISIBLE);
+                this.ukBalanceText.setText(walletHandler.ukBalString);
+                this.ausBalanceText.setText(walletHandler.ausBalString);
+                APINGAccountRequester.setDblAusBalance(walletHandler.ausBalance);
+                invalidateOptionsMenu();
+                //onCreateOptionsMenu(this.mnActionBar);
+                this.pdLoading.hide();
+            }
         }
 
     }

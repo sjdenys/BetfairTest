@@ -214,11 +214,11 @@ public class RunnersActivity extends AppCompatActivity implements ActivityRespon
     }
 
     @Override
-    public void responseReceived(String strResponseReceived){
-        if(strResponseReceived.endsWith("Exception")){
+    public void responseReceived(Object objResponseReceived){
+        if(objResponseReceived.getClass() == Exception.class){
             Log.d("thingy", "problem");
         }
-        else{
+        else if(objResponseReceived.getClass() == String.class){
             if(this.rnnrshndlr.getAlrnnrPlaceRunners().size() == 0){
                 this.spnnrMarket.setEnabled(false);
             }

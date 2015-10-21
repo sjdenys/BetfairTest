@@ -2,4 +2,5 @@
 <resources>
     <color name="betfair_yellow">#00B8FF</color>
     <color name="betfair_black">#D6D7D7</color>
+    <color name="betfair_button">#FFFFFF</color>
 </resources>

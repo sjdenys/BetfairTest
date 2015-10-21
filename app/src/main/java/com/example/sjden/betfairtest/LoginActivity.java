@@ -136,7 +136,7 @@ public class LoginActivity extends Activity implements ActivityResponseListener 
         }
     }
 
-    public void responseReceived(String strResponseReceived) {
+    public void responseReceived(Object objResponseReceived) {
         pdLoggingIn.hide();
         AlertDialog.Builder alertDialogBuilder =
                 new AlertDialog.Builder(this)
@@ -145,44 +145,46 @@ public class LoginActivity extends Activity implements ActivityResponseListener 
                                 dialog.cancel();
                             }
                         });
-
-        if(strResponseReceived.compareTo("SUCCESS") == 0){
-            if(chckbxKeepLoggedIn.isChecked()) {
-                // We need an Editor object to make preference changes.
-                // All objects are from android.context.Context
-                SharedPreferences settings = this.getSharedPreferences("LoginDataFile", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString("username", edttxtUsername.getText().toString());
-                editor.putString("password", edttxtPassword.getText().toString());
-                editor.putLong("balance", Double.doubleToRawLongBits(APINGAccountRequester.getDblAusBalance()));
-                // Commit the edits!
-                editor.apply();
-            }
-            Intent intnt = new Intent(this, RaceTypeActivity.class);
-            startActivity(intnt);
-            finish();
-        }
-        else{
-            if(strResponseReceived.compareTo("UnknownHostException") == 0) {
+        if(objResponseReceived.getClass() == Exception.class){
+            Exception excResponseReceived = (Exception)objResponseReceived;
+            if(excResponseReceived.getMessage().compareTo("UnknownHostException") == 0) {
                 alertDialogBuilder.setTitle("Couldn't log in");
                 alertDialogBuilder.setMessage("Can't connect to Betfair right now. Please check your network connection and try again.");
                 AlertDialog adError = alertDialogBuilder.show();
             }
-            else if(strResponseReceived.compareTo("SUCCESS") != 0){
-                Log.d("thingy", strResponseReceived);
-                if(strResponseReceived.compareTo("INVALID_USERNAME_OR_PASSWORD") == 0 || strResponseReceived.compareTo("MULTIPLE_USERS_WITH_SAME_CREDENTIAL") == 0) {
-                    alertDialogBuilder.setTitle("Couldn't log in");
-                    alertDialogBuilder.setMessage("Invalid username or password.");
-                    AlertDialog adError = alertDialogBuilder.show();
+        }
+        else if(objResponseReceived.getClass() == String.class) {
+            String strResponseReceived = (String)objResponseReceived;
+            if (strResponseReceived.compareTo("SUCCESS") == 0) {
+                if (chckbxKeepLoggedIn.isChecked()) {
+                    // We need an Editor object to make preference changes.
+                    // All objects are from android.context.Context
+                    SharedPreferences settings = this.getSharedPreferences("LoginDataFile", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString("username", edttxtUsername.getText().toString());
+                    editor.putString("password", edttxtPassword.getText().toString());
+                    editor.putLong("balance", Double.doubleToRawLongBits(APINGAccountRequester.getDblAusBalance()));
+                    // Commit the edits!
+                    editor.apply();
                 }
-                else{
-                    alertDialogBuilder.setTitle("Couldn't log in");
-                    alertDialogBuilder.setMessage("Something has gone wrong and we couldn't log you in. Please try again soon.");
-                    AlertDialog adError = alertDialogBuilder.show();
+                Intent intnt = new Intent(this, RaceTypeActivity.class);
+                startActivity(intnt);
+                finish();
+            } else {
+                if (strResponseReceived.compareTo("SUCCESS") != 0) {
+                    Log.d("thingy", strResponseReceived);
+                    if (strResponseReceived.compareTo("INVALID_USERNAME_OR_PASSWORD") == 0 || strResponseReceived.compareTo("MULTIPLE_USERS_WITH_SAME_CREDENTIAL") == 0) {
+                        alertDialogBuilder.setTitle("Couldn't log in");
+                        alertDialogBuilder.setMessage("Invalid username or password.");
+                        AlertDialog adError = alertDialogBuilder.show();
+                    } else {
+                        alertDialogBuilder.setTitle("Couldn't log in");
+                        alertDialogBuilder.setMessage("Something has gone wrong and we couldn't log you in. Please try again soon.");
+                        AlertDialog adError = alertDialogBuilder.show();
+                    }
                 }
             }
         }
-
     }
 
 }

@@ -1,7 +1,8 @@
 package com.example.sjden.betfairtest;
 
-import android.app.ListActivity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -13,35 +14,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.sjden.betfairtest.objects.ClearedOrderSummary;
-import com.example.sjden.betfairtest.objects.Runner;
-import com.example.sjden.betfairtest.objects.RunnerCatalog;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class BetlistActivity extends AppCompatActivity implements ActivityResponseListener{
 
     private BetlistHandler handler = new BetlistHandler();
-    private RelativeLayout rl;
     public List<String> simpleValues;
     private ListView lstvwRunners;
     private ArrayAdapter<BetlistHandler.OrderForList> adapter;
-    private ProgressBar prgrssbrLoading;
+    private ProgressBar pbLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +43,7 @@ public class BetlistActivity extends AppCompatActivity implements ActivityRespon
         this.handler.setActivityResponseListener(this);
         handler.sendRequestCurrentOrders();
         this.lstvwRunners = (ListView)findViewById(R.id.lstvwBetList);
-        this.prgrssbrLoading = (ProgressBar)findViewById(R.id.prgrssbrLoading);
+        this.pbLoading = (ProgressBar)findViewById(R.id.pbLoading);
     }
 
     @Override
@@ -99,12 +91,21 @@ public class BetlistActivity extends AppCompatActivity implements ActivityRespon
     }
 
     @Override
-    public void responseReceived(String strResponseReceived) {
-        if(strResponseReceived.endsWith("Exception")){
-            Log.d("thingy", "error");
+    public void responseReceived(Object objResponseReceived) {
+        if(objResponseReceived.getClass() == Exception.class){
+            AlertDialog.Builder alertDialogBuilder =
+                    new AlertDialog.Builder(this)
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+            alertDialogBuilder.setTitle("Couldn't show bet history");
+            alertDialogBuilder.setMessage("Something has gone wrong and we couldn't show your bet history. Please try again soon.");
+            AlertDialog adError = alertDialogBuilder.show();
         }
-        else {
-            this.prgrssbrLoading.setVisibility(View.INVISIBLE);
+        else if(objResponseReceived.getClass() == String.class){
+            this.pbLoading.setVisibility(View.INVISIBLE);
             this.adapter = new BetlistArrayAdapter(this, this.handler.getAloflBetList());
             this.lstvwRunners.setAdapter(adapter);
         }
@@ -143,7 +144,11 @@ public class BetlistActivity extends AppCompatActivity implements ActivityRespon
                 txtvwProfit.setTextColor(Color.RED);
             }
             txtvwRace.setText(alrnnrOrders.get(position).getStrRace());
-            txtvwDatePlaced.setText(alrnnrOrders.get(position).getDtDatePlaced().toString());
+            DateTime dtMarketStartTime = new DateTime(alrnnrOrders.get(position).getDtDatePlaced());
+            DateTimeZone zone = DateTimeZone.forID("Australia/Melbourne");
+            dtMarketStartTime = dtMarketStartTime.plus(zone.getOffset(DateTime.now()));
+            DateTimeFormatter dtfOut = DateTimeFormat.forPattern("dd/MM/yy HH:mm");
+            txtvwDatePlaced.setText(dtfOut.print(dtMarketStartTime));
             return rowView;
         }
     }
